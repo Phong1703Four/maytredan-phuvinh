@@ -1,0 +1,168 @@
+{
+  "name": "CommunityPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Ti\u00eau \u0111\u1ec1 b\u00e0i vi\u1ebft"
+    },
+    "content": {
+      "type": "string",
+      "description": "N\u1ed9i dung b\u00e0i vi\u1ebft"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "T\u00ean t\u00e1c gi\u1ea3"
+    },
+    "author_email": {
+      "type": "string",
+      "description": "Email t\u00e1c gi\u1ea3"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Avatar URL"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Danh s\u00e1ch \u1ea3nh"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "showcase",
+        "tutorial",
+        "question",
+        "review",
+        "story",
+        "idea"
+      ],
+      "default": "showcase",
+      "description": "Lo\u1ea1i b\u00e0i vi\u1ebft"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Hashtag / ch\u1ee7 \u0111\u1ec1"
+    },
+    "likes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Danh s\u00e1ch user ID \u0111\u00e3 th\u00edch"
+    },
+    "like_count": {
+      "type": "number",
+      "default": 0,
+      "description": "S\u1ed1 l\u01b0\u1ee3t th\u00edch"
+    },
+    "comment_count": {
+      "type": "number",
+      "default": 0,
+      "description": "S\u1ed1 b\u00ecnh lu\u1eadn"
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "author_name": {
+            "type": "string"
+          },
+          "author_email": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "created_date": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Danh s\u00e1ch b\u00ecnh lu\u1eadn"
+    },
+    "reports": {
+      "type": "number",
+      "default": 0,
+      "description": "S\u1ed1 l\u01b0\u1ee3t b\u00e1o c\u00e1o"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "hidden",
+        "removed"
+      ],
+      "default": "active",
+      "description": "Tr\u1ea1ng th\u00e1i b\u00e0i vi\u1ebft"
+    },
+    "moderation_flagged": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u0110\u00e3 b\u1ecb \u0111\u00e1nh d\u1ea5u ki\u1ec3m duy\u1ec7t"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "author_name",
+    "author_email"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.author_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": null,
+    "update": {
+      "$or": [
+        {
+          "data.author_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.author_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

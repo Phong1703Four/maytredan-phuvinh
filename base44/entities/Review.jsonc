@@ -1,0 +1,88 @@
+{
+  "name": "Review",
+  "type": "object",
+  "properties": {
+    "product_id": {
+      "type": "number",
+      "description": "ID s\u1ea3n ph\u1ea9m"
+    },
+    "product_name": {
+      "type": "string",
+      "description": "T\u00ean s\u1ea3n ph\u1ea9m"
+    },
+    "reviewer_name": {
+      "type": "string",
+      "description": "T\u00ean ng\u01b0\u1eddi \u0111\u00e1nh gi\u00e1"
+    },
+    "reviewer_email": {
+      "type": "string",
+      "description": "Email ng\u01b0\u1eddi \u0111\u00e1nh gi\u00e1"
+    },
+    "rating": {
+      "type": "number",
+      "description": "\u0110i\u1ec3m \u0111\u00e1nh gi\u00e1 (1-5)"
+    },
+    "comment": {
+      "type": "string",
+      "description": "N\u1ed9i dung b\u00ecnh lu\u1eadn"
+    },
+    "order_id": {
+      "type": "string",
+      "description": "ID \u0111\u01a1n h\u00e0ng li\u00ean quan"
+    }
+  },
+  "required": [
+    "product_id",
+    "rating",
+    "comment",
+    "reviewer_name"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.reviewer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": null,
+    "update": {
+      "$or": [
+        {
+          "data.reviewer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.reviewer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

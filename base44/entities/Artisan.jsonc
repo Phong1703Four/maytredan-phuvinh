@@ -1,0 +1,76 @@
+{
+  "name": "Artisan",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "T\u00ean ngh\u1ec7 nh\u00e2n"
+    },
+    "specialty": {
+      "type": "string",
+      "description": "Chuy\u00ean m\u00f4n"
+    },
+    "experience_years": {
+      "type": "number",
+      "description": "S\u1ed1 n\u0103m kinh nghi\u1ec7m"
+    },
+    "rating": {
+      "type": "number",
+      "description": "\u0110i\u1ec3m \u0111\u00e1nh gi\u00e1"
+    },
+    "total_orders": {
+      "type": "number",
+      "description": "S\u1ed1 \u0111\u01a1n \u0111\u00e3 ho\u00e0n th\u00e0nh"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Ti\u1ec3u s\u1eed ng\u1eafn"
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "K\u1ef9 n\u0103ng \u0111\u1eb7c bi\u1ec7t"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "\u1ea2nh ngh\u1ec7 nh\u00e2n"
+    },
+    "price_per_item": {
+      "type": "string",
+      "description": "Gi\u00e1 tham kh\u1ea3o m\u1ed7i s\u1ea3n ph\u1ea9m"
+    },
+    "turnaround_days": {
+      "type": "number",
+      "description": "Th\u1eddi gian ho\u00e0n th\u00e0nh (ng\u00e0y)"
+    },
+    "available": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u0110ang nh\u1eadn \u0111\u01a1n kh\u00f4ng"
+    }
+  },
+  "required": [
+    "name",
+    "specialty"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": null,
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

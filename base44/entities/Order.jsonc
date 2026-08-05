@@ -1,0 +1,160 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "customer_name": {
+      "type": "string",
+      "description": "T\u00ean kh\u00e1ch h\u00e0ng"
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Email kh\u00e1ch h\u00e0ng"
+    },
+    "customer_phone": {
+      "type": "string",
+      "description": "S\u1ed1 \u0111i\u1ec7n tho\u1ea1i"
+    },
+    "customer_address": {
+      "type": "string",
+      "description": "\u0110\u1ecba ch\u1ec9 giao h\u00e0ng"
+    },
+    "items": {
+      "type": "array",
+      "description": "Danh s\u00e1ch s\u1ea3n ph\u1ea9m \u0111\u1eb7t",
+      "items": {
+        "type": "object"
+      }
+    },
+    "total_price": {
+      "type": "number",
+      "description": "T\u1ed5ng ti\u1ec1n sau gi\u1ea3m gi\u00e1"
+    },
+    "original_price": {
+      "type": "number",
+      "description": "T\u1ed5ng ti\u1ec1n g\u1ed1c"
+    },
+    "voucher_code": {
+      "type": "string",
+      "description": "M\u00e3 voucher \u0111\u00e3 d\u00f9ng"
+    },
+    "discount_amount": {
+      "type": "number",
+      "description": "S\u1ed1 ti\u1ec1n \u0111\u01b0\u1ee3c gi\u1ea3m"
+    },
+    "freeship": {
+      "type": "boolean",
+      "description": "\u0110\u01b0\u1ee3c mi\u1ec5n ph\u00ed ship kh\u00f4ng"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "shipping",
+        "delivered",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "order_type": {
+      "type": "string",
+      "enum": [
+        "shop",
+        "custom_design"
+      ],
+      "default": "shop"
+    },
+    "artisan_id": {
+      "type": "string",
+      "description": "ID ngh\u1ec7 nh\u00e2n (n\u1ebfu \u0111\u1eb7t thi\u1ebft k\u1ebf)"
+    },
+    "artisan_name": {
+      "type": "string",
+      "description": "T\u00ean ngh\u1ec7 nh\u00e2n"
+    },
+    "design_description": {
+      "type": "string",
+      "description": "M\u00f4 t\u1ea3 thi\u1ebft k\u1ebf AI"
+    },
+    "design_image_url": {
+      "type": "string",
+      "description": "\u1ea2nh thi\u1ebft k\u1ebf AI"
+    },
+    "membership_tier": {
+      "type": "string",
+      "description": "H\u1ea1ng th\u00e0nh vi\u00ean l\u00fac \u0111\u1eb7t"
+    },
+    "note": {
+      "type": "string",
+      "description": "Ghi ch\u00fa \u0111\u01a1n h\u00e0ng"
+    }
+  },
+  "required": [
+    "customer_name",
+    "customer_phone",
+    "items",
+    "total_price"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "data.customer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "data.customer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "data.customer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.customer_email": "{{user.email}}"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
