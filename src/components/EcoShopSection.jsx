@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ShoppingCart, Star, Heart, Eye, X, Plus, Minus, Trash2, ShoppingBag, Check, Filter, Search, BookOpen, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/LanguageContext';
@@ -11,7 +11,6 @@ import { trackProductView, trackAddToCart, trackCheckout } from '../lib/analytic
 const fmt = (n) => n.toLocaleString('vi-VN') + 'đ';
 
 function SortDropdown({ value, onChange, t }) {
-    const { useState, useRef, useEffect } = require('react');
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
 
