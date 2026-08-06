@@ -29,7 +29,7 @@ export default function Navbar() {
     return (
         <>
             <nav className="fixed top-0 left-0 right-0 z-50 h-[72px] bg-background/75 backdrop-blur-xl border-b border-border/40 shadow-sm">
-                <div className="max-w-[1400px] mx-auto h-full px-5 lg:px-8 flex items-center justify-between gap-4">
+                <div className="w-full h-full px-4 lg:px-6 flex items-center justify-between gap-8">
                     {/* Zone 1: Logo */}
                     <div className="flex-1 flex items-center justify-start">
                         <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">

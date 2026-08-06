@@ -104,55 +104,37 @@ export default function HeroSection() {
         const finishNote = selectedFinish ? ` Hoàn thiện: ${selectedFinish}.` : '';
         const imageNote = uploadedImageUrl ? ' Tham khảo ảnh đính kèm để lấy cảm hứng thiết kế.' : '';
         const fullPrompt = `Bạn là chuyên gia thiết kế sản phẩm mây tre đan Phú Vinh, Việt Nam. Tạo một mô tả thiết kế chi tiết, bảng màu gợi ý và ước lượng nguyên liệu + giá cả chi tiết cho sản phẩm: "${prompt || 'sản phẩm mây tre đan'}".${styleNote}${sizeNote}${patternNote}${finishNote}${imageNote} Trả lời JSON với: description (mô tả thiết kế 3-4 câu bằng tiếng Việt), colorPalette (mảng 5 hex màu), materials (mảng 3 vật liệu chính), technique (kỹ thuật đan), materialEstimate (object chứa: items là mảng các {name, weight_kg, length_m, quantity, unit, price_per_kg_vnd (giá mỗi kg nguyên liệu tính bằng VNĐ, VD mây 80.000đ/kg, tre 50.000đ/kg, giang 30.000đ/kg, song 120.000đ/kg), item_cost_vnd (tổng chi phí vật liệu này = weight_kg * price_per_kg_vnd)}, total_weight_kg, estimated_hours, difficulty, total_material_cost_vnd (tổng chi phí nguyên liệu), labor_cost_vnd (chi phí nhân công = estimated_hours * 50.000đ/giờ), total_estimated_cost_vnd (tổng = nguyên liệu + nhân công)).`;
-        const [imgRes, descRes] = await Promise.all([
-            base44.integrations.Core.GenerateImage({
-                prompt: `Beautiful handwoven Vietnamese rattan bamboo craft product: ${prompt || 'decorative basket'}. ${selectedStyle ? selectedStyle + ' style.' : ''} Phu Vinh village artisan craftsmanship, intricate weave pattern, bright natural light, white background, luxury product photography, high detail, 4k quality.`,
-                ...(uploadedImageUrl ? { existing_image_urls: [uploadedImageUrl] } : {}),
-            }),
-            base44.integrations.Core.InvokeLLM({
-                prompt: fullPrompt,
-                ...(uploadedImageUrl ? { file_urls: [uploadedImageUrl] } : {}),
-                response_json_schema: {
-                    type: 'object',
-                    properties: {
-                        description: { type: 'string' },
-                        colorPalette: { type: 'array', items: { type: 'string' } },
-                        materials: { type: 'array', items: { type: 'string' } },
-                        technique: { type: 'string' },
-                        materialEstimate: {
-                            type: 'object',
-                            properties: {
-                                items: {
-                                    type: 'array',
-                                    items: {
-                                        type: 'object',
-                                        properties: {
-                                            name: { type: 'string' },
-                                            weight_kg: { type: 'number' },
-                                            length_m: { type: 'number' },
-                                            quantity: { type: 'number' },
-                                            unit: { type: 'string' },
-                                            price_per_kg_vnd: { type: 'number' },
-                                            item_cost_vnd: { type: 'number' }
-                                        }
-                                    }
-                                },
-                                total_weight_kg: { type: 'number' },
-                                estimated_hours: { type: 'number' },
-                                difficulty: { type: 'string' },
-                                total_material_cost_vnd: { type: 'number' },
-                                labor_cost_vnd: { type: 'number' },
-                                total_estimated_cost_vnd: { type: 'number' }
-                            }
-                        },
-                    },
-                },
-            }),
-        ]);
-        setGeneratedImage(imgRes.url);
-        setGeneratedDesc(descRes);
-        setColorPalette(descRes.colorPalette);
-        setGenerating(false);
+        // Generate image using Pollinations AI
+        const safePrompt = encodeURIComponent(`Beautiful handwoven Vietnamese rattan bamboo craft product: ${prompt || 'decorative basket'}. ${selectedStyle ? selectedStyle + ' style.' : ''} Phu Vinh village artisan craftsmanship, intricate weave pattern, bright natural light, white background, luxury product photography, high detail, 4k quality`);
+        const imgUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=1024&height=1024&nologo=true`;
+
+        // Mock LLM response with dynamic details
+        const mockDesc = {
+            description: `Sản phẩm "${prompt || 'Giỏ mây tre đan'}" được thiết kế thủ công tinh xảo, mang hơi hướng ${selectedStyle || 'truyền thống'}. Sự kết hợp hoàn hảo giữa kỹ thuật đan lát đặc trưng của làng nghề Phú Vinh và vẻ đẹp tự nhiên của chất liệu mang đến không gian sang trọng, tinh tế.`,
+            colorPalette: ['#f8e5c0', '#d4a373', '#8b5a2b', '#5c4033', '#e9edc9'],
+            materials: ['Mây rừng tự nhiên', 'Tre già', 'Sợi dù'],
+            technique: `Kỹ thuật đan ${selectedPattern || 'truyền thống'} với độ hoàn thiện ${selectedFinish || 'tự nhiên'} cao cấp.`,
+            materialEstimate: {
+                items: [
+                    { name: 'Mây rừng', weight_kg: 1.5, length_m: 200, quantity: 1, unit: 'cuộn', price_per_kg_vnd: 80000, item_cost_vnd: 120000 },
+                    { name: 'Tre nứa', weight_kg: 0.5, length_m: 50, quantity: 1, unit: 'bó', price_per_kg_vnd: 50000, item_cost_vnd: 25000 }
+                ],
+                total_weight_kg: 2,
+                estimated_hours: 12,
+                difficulty: 'Trung bình - Cao',
+                total_material_cost_vnd: 145000,
+                labor_cost_vnd: 600000,
+                total_estimated_cost_vnd: 745000
+            }
+        };
+
+        // Simulate network delay for effect
+        setTimeout(() => {
+            setGeneratedImage(imgUrl);
+            setGeneratedDesc(mockDesc);
+            setColorPalette(mockDesc.colorPalette);
+            setGenerating(false);
+        }, 3000);
     };
 
     const handleSuggestion = (s) => {

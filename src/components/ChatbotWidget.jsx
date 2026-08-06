@@ -86,7 +86,7 @@ ALWAYS respond in the SAME LANGUAGE as the user's message. Return JSON with: rep
 export default function ChatbotWidget() {
     const { t, lang } = useLang();
     const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [messages, setMessages] = useState([{ role: 'assistant', content: t('chat.greeting') }]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
@@ -178,34 +178,23 @@ export default function ChatbotWidget() {
 
     return (
         <>
-            <button onClick={() => setOpen(!open)}
-                className={`fixed bottom-6 left-6 z-50 flex items-center gap-2 px-4 py-3 rounded-2xl transition-all duration-300 shadow-2xl
-        ${open ? 'bg-secondary border border-border/50 text-muted-foreground' : 'bg-gradient-to-r from-violet-600 to-purple-700 text-white hover:shadow-purple-500/40 hover:-translate-y-1'}`}>
-                {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
-                {!open && <span className="text-sm font-semibold">{t('chat.btn')}</span>}
-                {!open && <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-green-400 border-2 border-background animate-pulse" />}
-            </button>
-
             {open && (
                 <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                    className="fixed bottom-20 left-6 z-50 w-[340px] md:w-[380px] max-h-[580px] flex flex-col rounded-2xl overflow-hidden border border-border/40 shadow-2xl shadow-purple-500/10 bg-card">
-                    <div className="px-4 py-3 bg-gradient-to-r from-violet-600 to-purple-700 flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                            <Bot className="w-5 h-5 text-white" />
+                    className="fixed bottom-6 right-6 z-50 w-[340px] md:w-[380px] h-[550px] max-h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-border/40 shadow-2xl shadow-purple-500/10 bg-card">
+                    <div className="px-4 py-3 bg-gradient-to-r from-violet-600 to-purple-700 flex items-center gap-3 shadow-sm z-10">
+                        <div className="w-10 h-10 rounded-full bg-white/20 p-0.5 border border-white/30 flex items-center justify-center">
+                            <img src="https://ui-avatars.com/api/?name=AI&background=random&color=fff" alt="AI" className="w-full h-full rounded-full object-cover" />
                         </div>
                         <div>
-                            <p className="text-white font-semibold text-sm">{t('chat.title')}</p>
-                            <p className="text-white/70 text-xs flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse" />
-                                {t('chat.online')}
+                            <p className="text-white font-bold text-sm tracking-wide">Phú Vinh AI</p>
+                            <p className="text-white/80 text-xs flex items-center gap-1.5 font-medium">
+                                <span className="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                                {t('chat.online') || 'Always Active'}
                             </p>
                         </div>
-                        <button onClick={() => setOpen(false)} className="ml-auto text-white/70 hover:text-white transition-colors">
-                            <X className="w-4 h-4" />
-                        </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background/60">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background/60">
                         {messages.map((msg, i) => (
                             <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 {msg.role === 'assistant' && (

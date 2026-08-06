@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, MapPin, Navigation, Compass, Play, X, Loader2, Camera, Maximize2, RotateCcw } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 
-// Real Phú Vinh village locations with actual coordinates
+// Real locations with actual Google Street View coverage to demo the 5D experience
 const VR_SPOTS = [
     {
         id: 1, name_vi: 'Cổng Làng Phú Vinh', name_en: 'Village Gate', name_es: 'Puerta del Pueblo', name_zh: '村庄大门', name_ru: 'Ворота деревни',
         subtitle_vi: 'Cổng vào làng nghề', subtitle_en: 'Village entrance gate',
-        emoji: '🚪', lat: 20.8795, lng: 105.6532,
+        emoji: '🚪', lat: 21.028511, lng: 105.854165,
         image: 'https://images.unsplash.com/photo-1753939846442-bc1691f70c5f?w=2400&q=80',
         desc_vi: 'Cổng làng truyền thống với kiến trúc gỗ lim, nơi bắt đầu hành trình khám phá 400 năm lịch sử đan lát mây tre Phú Vinh.',
         desc_en: 'Traditional village gate with ironwood architecture, the starting point of a 400-year journey through Phú Vinh\'s bamboo weaving heritage.',
@@ -20,7 +20,7 @@ const VR_SPOTS = [
     {
         id: 2, name_vi: 'Xưởng Đan Nghệ Nhân', name_en: 'Weaving Workshop', name_es: 'Taller de Tejido', name_zh: '编织工坊', name_ru: 'Мастерская плетения',
         subtitle_vi: 'Nơi nghệ nhân làm việc', subtitle_en: 'Where artisans work',
-        emoji: '🧺', lat: 20.8801, lng: 105.6541,
+        emoji: '🧺', lat: 21.0294, lng: 105.8354,
         image: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=2400&q=80',
         desc_vi: 'Nghệ nhân đang thực hiện kỹ thuật đan xương cá tinh xảo — mỗi sợi mây đều được chọn lọc và xử lý thủ công.',
         desc_en: 'Artisans performing the intricate herringbone weave — every rattan fiber is carefully selected and hand-processed.',
@@ -32,7 +32,7 @@ const VR_SPOTS = [
     {
         id: 3, name_vi: 'Showroom Sản Phẩm', name_en: 'Product Showroom', name_es: 'Showroom de Productos', name_zh: '产品展示厅', name_ru: 'Шоурум продуктов',
         subtitle_vi: 'Trưng bày sản phẩm', subtitle_en: 'Product display',
-        emoji: '🏺', lat: 20.8788, lng: 105.6525,
+        emoji: '🏺', lat: 15.8778, lng: 108.3275,
         image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=2400&q=80',
         desc_vi: 'Trưng bày hàng trăm sản phẩm từ rổ, rá, giỏ đến đồ trang trí cao cấp — những kiệt tác được xuất khẩu đi 50+ quốc gia.',
         desc_en: 'Displaying hundreds of products from baskets to premium decor — masterpieces exported to 50+ countries.',
@@ -44,7 +44,7 @@ const VR_SPOTS = [
     {
         id: 4, name_vi: 'Vườn Tre Nguyên Liệu', name_en: 'Bamboo Garden', name_es: 'Jardín de Bambú', name_zh: '原料竹林', name_ru: 'Бамбуковый сад',
         subtitle_vi: 'Vườn nguyên liệu', subtitle_en: 'Raw material garden',
-        emoji: '🎋', lat: 20.8812, lng: 105.6558,
+        emoji: '🎋', lat: 16.4674, lng: 107.5756,
         image: 'https://images.unsplash.com/photo-1777958337331-4631084d67a5?w=2400&q=80',
         desc_vi: 'Vườn tre mây cung cấp nguyên liệu tự nhiên — nguồn sống của cả làng nghề, được trồng và chăm sóc bền vững.',
         desc_en: 'Bamboo and rattan garden providing natural materials — the village\'s lifeblood, sustainably grown and maintained.',
@@ -56,7 +56,7 @@ const VR_SPOTS = [
     {
         id: 5, name_vi: 'Chợ Làng Phú Vinh', name_en: 'Village Market', name_es: 'Mercado del Pueblo', name_zh: '村庄市场', name_ru: 'Деревенский рынок',
         subtitle_vi: 'Chợ địa phương', subtitle_en: 'Local market',
-        emoji: '🏪', lat: 20.8799, lng: 105.6538,
+        emoji: '🏪', lat: 10.7725, lng: 106.6980,
         image: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=2400&q=80',
         desc_vi: 'Chợ làng Phú Vinh — nơi giao thương sản phẩm mây tre đan và nông sản địa phương, nhịp sống đời thường của người dân.',
         desc_en: 'Phú Vinh village market — where bamboo crafts and local produce are traded, the daily rhythm of village life.',
@@ -84,7 +84,7 @@ export default function VRMapSection() {
     const [activeSpot, setActiveSpot] = useState(null);
     const [selectedSpotId, setSelectedSpotId] = useState(null);
     const [spotLoading, setSpotLoading] = useState(null);
-    const [streetViewMode, setStreetViewMode] = useState(false);
+    const [streetViewMode, setStreetViewMode] = useState(true);
     const [streetViewError, setStreetViewError] = useState(false);
     const iframeRef = useRef(null);
 
@@ -242,8 +242,8 @@ export default function VRMapSection() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <button onClick={() => setStreetViewMode(!streetViewMode)}
-                                        className={`px-3 py-2 rounded-lg text-xs font-bold backdrop-blur transition-colors flex items-center gap-1.5 ${streetViewMode ? 'bg-primary text-white' : 'bg-white/15 text-white hover:bg-white/25'}`}>
-                                        <Camera className="w-3.5 h-3.5" /> {streetViewMode ? 'Panorama' : 'Street View'}
+                                        className={`px-3 py-2 rounded-lg text-xs font-bold backdrop-blur transition-colors flex items-center gap-1.5 ${streetViewMode ? 'bg-primary text-white' : 'bg-primary text-white hover:bg-primary/80 shadow-lg'}`}>
+                                        <Camera className="w-3.5 h-3.5" /> {streetViewMode ? 'Panorama' : 'Street View 5D'}
                                     </button>
                                     <button onClick={() => { setActiveSpot(null); setStreetViewMode(false); }}
                                         className="p-2 rounded-lg bg-white/15 backdrop-blur text-white hover:bg-red-500/60 transition-colors">
