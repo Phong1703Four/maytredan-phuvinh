@@ -128,13 +128,22 @@ export default function HeroSection() {
             }
         };
 
-        // Simulate network delay for effect
-        setTimeout(() => {
+        // Preload image to avoid broken icon while downloading
+        const img = new Image();
+        img.src = imgUrl;
+        img.onload = () => {
             setGeneratedImage(imgUrl);
             setGeneratedDesc(mockDesc);
             setColorPalette(mockDesc.colorPalette);
             setGenerating(false);
-        }, 3000);
+        };
+        img.onerror = () => {
+            // Fallback if Pollinations fails
+            setGeneratedImage('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80');
+            setGeneratedDesc(mockDesc);
+            setColorPalette(mockDesc.colorPalette);
+            setGenerating(false);
+        };
     };
 
     const handleSuggestion = (s) => {

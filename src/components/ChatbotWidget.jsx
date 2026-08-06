@@ -86,7 +86,7 @@ ALWAYS respond in the SAME LANGUAGE as the user's message. Return JSON with: rep
 export default function ChatbotWidget() {
     const { t, lang } = useLang();
     const navigate = useNavigate();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState([{ role: 'assistant', content: t('chat.greeting') }]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
@@ -145,31 +145,35 @@ export default function ChatbotWidget() {
         const langMap = { vi: 'Trả lời bằng tiếng Việt.', en: 'Respond in English.', es: 'Responde en español.', zh: '请用中文回答。', ru: 'Отвечайте на русском.', th: 'ตอบเป็นภาษาไทย', hi: 'हिंदी में उत्तर दें', ja: '日本語で答えてください。', ko: '한국어로 답변해 주세요.' };
         const langInstruction = langMap[lang] || langMap.vi;
 
-        const result = await base44.integrations.Core.InvokeLLM({
-            prompt: `${SYSTEM_PROMPT}\n\n${langInstruction}\n\n${contextSummary}\n\nChat history:\n${conversationText}\n\nRespond to the user's last message as a smart sales consultant. If you recommend products, explain WHY each fits their needs. Return JSON with: reply (your response), productIds (array of product id numbers to suggest, 1-6, can be empty), customerUpdate (object with optional fields: budget, preferences (array), intent, viewedProducts (array of ids) — only include fields that changed based on this message).`,
-            response_json_schema: {
-                type: 'object',
-                properties: {
-                    reply: { type: 'string' },
-                    productIds: { type: 'array', items: { type: 'number' } },
-                    customerUpdate: { type: 'object', additionalProperties: true },
-                },
-            },
-        });
-
-        setMessages(prev => [...prev, { role: 'assistant', content: result.reply }]);
-        if (result.productIds?.length) {
-            setSuggestedProducts(PRODUCTS.filter(p => result.productIds.includes(p.id)));
-            setUserContext(prev => ({ ...prev, viewedProducts: [...new Set([...(prev.viewedProducts || []), ...result.productIds])] }));
+        try {
+            const systemPrompt = `Bạn là chuyên gia tư vấn bán hàng mây tre đan Phú Vinh. ${langInstruction} Trả lời ngắn gọn, thân thiện, súc tích (tối đa 3 câu). Không dùng định dạng markdown phức tạp. Khách hàng hỏi: ${userText}`;
+            const res = await fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(systemPrompt)}?model=openai`);
+            const replyText = await res.text();
+            
+            setMessages(prev => [...prev, { role: 'assistant', content: replyText }]);
+            
+            // Basic local product recommendation based on keywords
+            const textLower = userText.toLowerCase();
+            const matchedIds = [];
+            if (textLower.includes('voi') || textLower.includes('chơi')) matchedIds.push(1);
+            if (textLower.includes('hoa') || textLower.includes('trang trí')) matchedIds.push(2);
+            if (textLower.includes('bút') || textLower.includes('văn phòng')) matchedIds.push(3);
+            if (textLower.includes('tường') || textLower.includes('phượng')) matchedIds.push(4);
+            if (textLower.includes('ảnh') || textLower.includes('khung')) matchedIds.push(5);
+            if (textLower.includes('rổ') || textLower.includes('đựng')) matchedIds.push(6);
+            
+            // Randomly suggest if asking for price/gift and no match
+            if (matchedIds.length === 0 && (textLower.includes('quà') || textLower.includes('giá') || textLower.includes('rẻ'))) {
+                matchedIds.push(1, 2);
+            }
+            
+            if (matchedIds.length > 0) {
+                setSuggestedProducts(PRODUCTS.filter(p => matchedIds.includes(p.id)));
+            }
+        } catch (error) {
+            setMessages(prev => [...prev, { role: 'assistant', content: 'Xin lỗi, hiện tại tôi đang bận. Vui lòng thử lại sau nhé!' }]);
         }
-        if (result.customerUpdate) {
-            setUserContext(prev => ({
-                budget: result.customerUpdate.budget || prev.budget,
-                preferences: result.customerUpdate.preferences || prev.preferences,
-                intent: result.customerUpdate.intent || prev.intent,
-                viewedProducts: result.customerUpdate.viewedProducts || prev.viewedProducts,
-            }));
-        }
+        
         setLoading(false);
     };
 
@@ -180,18 +184,23 @@ export default function ChatbotWidget() {
         <>
             {open && (
                 <motion.div initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                    className="fixed bottom-6 right-6 z-50 w-[340px] md:w-[380px] h-[550px] max-h-[85vh] flex flex-col rounded-2xl overflow-hidden border border-border/40 shadow-2xl shadow-purple-500/10 bg-card">
-                    <div className="px-4 py-3 bg-gradient-to-r from-violet-600 to-purple-700 flex items-center gap-3 shadow-sm z-10">
-                        <div className="w-10 h-10 rounded-full bg-white/20 p-0.5 border border-white/30 flex items-center justify-center">
-                            <img src="https://ui-avatars.com/api/?name=AI&background=random&color=fff" alt="AI" className="w-full h-full rounded-full object-cover" />
+                    className="fixed bottom-24 left-6 z-50 w-[340px] md:w-[380px] h-[550px] max-h-[80vh] flex flex-col rounded-2xl overflow-hidden border border-border/40 shadow-2xl shadow-purple-500/10 bg-card">
+                    <div className="px-4 py-3 bg-gradient-to-r from-violet-600 to-purple-700 flex items-center justify-between shadow-sm z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-white/20 p-0.5 border border-white/30 flex items-center justify-center">
+                                <img src="https://ui-avatars.com/api/?name=AI&background=random&color=fff" alt="AI" className="w-full h-full rounded-full object-cover" />
+                            </div>
+                            <div>
+                                <p className="text-white font-bold text-sm tracking-wide">Phú Vinh AI</p>
+                                <p className="text-white/80 text-xs flex items-center gap-1.5 font-medium">
+                                    <span className="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                                    {t('chat.online') || 'Always Active'}
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-white font-bold text-sm tracking-wide">Phú Vinh AI</p>
-                            <p className="text-white/80 text-xs flex items-center gap-1.5 font-medium">
-                                <span className="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-                                {t('chat.online') || 'Always Active'}
-                            </p>
-                        </div>
+                        <button onClick={() => setOpen(false)} className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors">
+                            <X className="w-4 h-4" />
+                        </button>
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background/60">
@@ -293,6 +302,15 @@ export default function ChatbotWidget() {
                         </button>
                     </div>
                 </motion.div>
+            )}
+
+            {!open && (
+                <button
+                    onClick={() => setOpen(true)}
+                    className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-violet-600 to-purple-700 text-white shadow-xl flex items-center justify-center hover:scale-110 transition-transform shadow-purple-500/30"
+                >
+                    <MessageCircle className="w-6 h-6" />
+                </button>
             )}
         </>
     );
