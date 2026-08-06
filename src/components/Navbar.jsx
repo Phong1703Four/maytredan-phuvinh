@@ -47,7 +47,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Zone 2: Navigation — centered */}
-                    <div className="hidden lg:flex items-center justify-center gap-5 xl:gap-8">
+                    <div className="hidden xl:flex items-center justify-center gap-5 xl:gap-8">
                         {NAV_LINKS.map(link => {
                             const active = isActive(link.to);
                             return (
@@ -73,7 +73,7 @@ export default function Navbar() {
                         <ThemeToggle />
                         <SettingsDropdown />
                         <UserMenu onOpenAuth={() => setAuthOpen(true)} />
-                        <button className="lg:hidden p-2 rounded-xl text-muted-foreground hover:bg-accent transition-colors" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
+                        <button className="xl:hidden p-2 rounded-xl text-muted-foreground hover:bg-accent transition-colors" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Menu">
                             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                         </button>
                     </div>
@@ -81,7 +81,7 @@ export default function Navbar() {
 
                 {/* Mobile drawer */}
                 {mobileOpen && (
-                    <div className="lg:hidden absolute top-[72px] left-0 right-0 bg-background/98 backdrop-blur-2xl border-b border-border/40 shadow-xl">
+                    <div className="xl:hidden absolute top-[72px] left-0 right-0 bg-background/98 backdrop-blur-2xl border-b border-border/40 shadow-xl">
                         <div className="px-5 py-4 space-y-1">
                             {NAV_LINKS.map(link => {
                                 const active = isActive(link.to);
