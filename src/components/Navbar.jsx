@@ -47,11 +47,11 @@ export default function Navbar() {
                     </div>
 
                     {/* Zone 2: Navigation — centered */}
-                    <div className="hidden lg:flex items-center justify-center gap-8 xl:gap-10">
+                    <div className="hidden lg:flex items-center justify-center gap-5 xl:gap-8">
                         {NAV_LINKS.map(link => {
                             const active = isActive(link.to);
                             return (
-                                <Link key={link.to} to={link.to} className={`relative py-2 text-[15px] font-medium transition-colors duration-200 group ${active ? 'text-primary' : 'text-gray-700 dark:text-gray-300 hover:text-primary'}`}>
+                                <Link key={link.to} to={link.to} className={`relative py-2 text-[15px] font-medium whitespace-nowrap transition-colors duration-200 group ${active ? 'text-primary' : 'text-gray-700 dark:text-gray-300 hover:text-primary'}`}>
                                     <span className="flex items-center gap-2">
                                         {link.label}
                                         {link.demo && (

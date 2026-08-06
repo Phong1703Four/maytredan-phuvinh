@@ -106,7 +106,7 @@ export default function LanguageCenter() {
                                 <div className="flex items-center justify-between mb-3">
                                     <h2 className="text-base font-bold text-foreground flex items-center gap-2">
                                         <Globe className="w-4 h-4 text-primary" />
-                                        Language Center
+                                        {lang === 'vi' ? 'Trung tâm Ngôn ngữ' : 'Language Center'}
                                     </h2>
                                     <button onClick={() => setOpen(false)} className="p-1.5 rounded-xl hover:bg-accent text-muted-foreground transition-colors">
                                         <X className="w-4 h-4" />
@@ -118,7 +118,7 @@ export default function LanguageCenter() {
                                         ref={searchRef}
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="Search language…"
+                                        placeholder={lang === 'vi' ? 'Tìm kiếm ngôn ngữ…' : 'Search language…'}
                                         className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-background/60 border border-border/50 text-sm outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/15 transition-all"
                                     />
                                 </div>
@@ -127,7 +127,9 @@ export default function LanguageCenter() {
                             {/* List */}
                             <div ref={listRef} className="max-h-[50vh] overflow-y-auto p-2">
                                 {filtered.length === 0 ? (
-                                    <p className="text-center text-sm text-muted-foreground py-8">No language found</p>
+                                    <p className="text-center text-sm text-muted-foreground py-8">
+                                        {lang === 'vi' ? 'Không tìm thấy ngôn ngữ' : 'No language found'}
+                                    </p>
                                 ) : (
                                     filtered.map((l, i) => {
                                         const active = l.code === lang;
@@ -160,7 +162,7 @@ export default function LanguageCenter() {
                             </div>
 
                             <div className="px-5 py-2.5 border-t border-border/40 text-[10px] text-muted-foreground/60 text-center">
-                                ↑ ↓ to navigate · Enter to select · Esc to close
+                                {lang === 'vi' ? '↑ ↓ để di chuyển · Enter để chọn · Esc để đóng' : '↑ ↓ to navigate · Enter to select · Esc to close'}
                             </div>
                         </motion.div>
                     </motion.div>

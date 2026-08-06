@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShoppingCart, Star, Heart, Eye, X, Plus, Minus, Trash2, ShoppingBag, Check, Filter, Search, BookOpen } from 'lucide-react';
+import { ShoppingCart, Star, Heart, Eye, X, Plus, Minus, Trash2, ShoppingBag, Check, Filter, Search, BookOpen, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLang } from '../context/LanguageContext';
 import CheckoutModal from './shop/CheckoutModal';
@@ -9,6 +9,53 @@ import { PRODUCTS } from '../lib/shopProducts';
 import { trackProductView, trackAddToCart, trackCheckout } from '../lib/analytics';
 
 const fmt = (n) => n.toLocaleString('vi-VN') + 'đ';
+
+function SortDropdown({ value, onChange, t }) {
+    const { useState, useRef, useEffect } = require('react');
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const handler = (e) => {
+            if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    const options = [
+        { v: 'popular', l: t('shop.sortPopular') },
+        { v: 'priceLow', l: t('shop.sortPriceLow') },
+        { v: 'priceHigh', l: t('shop.sortPriceHigh') },
+        { v: 'rating', l: t('shop.sortRating') }
+    ];
+    const current = options.find(o => o.v === value);
+
+    return (
+        <div ref={ref} className="relative z-40">
+            <button
+                onClick={() => setOpen(!open)}
+                className="flex items-center gap-1.5 bg-transparent text-xs font-bold text-foreground outline-none cursor-pointer"
+            >
+                {current?.l}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+            </button>
+            {open && (
+                <div className="absolute right-0 top-full mt-2 w-44 rounded-2xl border border-border/60 bg-card shadow-xl overflow-hidden p-1 flex flex-col gap-0.5 animate-in fade-in zoom-in-95 duration-200">
+                    {options.map(o => (
+                        <button
+                            key={o.v}
+                            onClick={() => { onChange(o.v); setOpen(false); }}
+                            className={`w-full text-left px-3 py-2 text-xs rounded-xl transition-all duration-200 ${value === o.v ? 'bg-primary text-white font-bold shadow-md shadow-primary/20' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}`}
+                        >
+                            {o.l}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function EcoShopSection() {
     const { t, lang } = useLang();
@@ -160,16 +207,7 @@ export default function EcoShopSection() {
 
                         <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-card border border-border ml-auto">
                             <span className="text-xs font-semibold text-muted-foreground mr-1">{t('shop.sort')}:</span>
-                            <select
-                                value={sortBy}
-                                onChange={e => setSortBy(e.target.value)}
-                                className="bg-transparent text-xs font-semibold text-foreground outline-none cursor-pointer"
-                            >
-                                <option value="popular">{t('shop.sortPopular')}</option>
-                                <option value="priceLow">{t('shop.sortPriceLow')}</option>
-                                <option value="priceHigh">{t('shop.sortPriceHigh')}</option>
-                                <option value="rating">{t('shop.sortRating')}</option>
-                            </select>
+                            <SortDropdown value={sortBy} onChange={setSortBy} t={t} />
                         </div>
                     </div>
 
