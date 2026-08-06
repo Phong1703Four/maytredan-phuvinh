@@ -33,11 +33,8 @@ export default function Navbar() {
                     {/* Zone 1: Logo */}
                     <div className="flex-1 flex items-center justify-start">
                         <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-                            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300">
-                                <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary" fill="none" stroke="currentColor" strokeWidth="1.8">
-                                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2" />
-                                    <path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4" />
-                                </svg>
+                            <div className="w-9 h-9 rounded-xl border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300 overflow-hidden">
+                                <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
                             </div>
                             <div className="hidden sm:block leading-none">
                                 <span className="text-[15px] font-semibold text-foreground tracking-tight block">Phú Vinh AI</span>

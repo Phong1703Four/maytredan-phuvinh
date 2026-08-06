@@ -9,7 +9,7 @@ const MATERIAL_ICONS = { bamboo: '🎋', rattan: '🌿', reed: '🌱' };
 export default function ProductGuideModal({ product, onClose }) {
     const { t, lang } = useLang();
 
-    const pName = () => lang === 'vi' ? product.name_vi : lang === 'en' ? product.name_en : lang === 'es' ? (product.name_es || product.name_en) : (product.name_zh || product.name_en);
+    const pName = () => product[`name_${lang}`] || product.name_zh || product.name_es || product.name_en;
     const guide = product.guide || {};
     const getText = (obj) => (obj ? (obj[lang] || obj.en || obj.vi || '') : '');
 

@@ -26,7 +26,7 @@ export default function UserMenu({ onOpenAuth }) {
     if (!user) {
         return (
             <button onClick={onOpenAuth}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-white transition-all">
+                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/10 border border-primary/30 text-primary text-sm font-semibold hover:bg-primary hover:text-white transition-all whitespace-nowrap">
                 <User className="w-4 h-4" /> {t('user.login')}
             </button>
         );

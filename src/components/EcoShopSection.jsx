@@ -81,8 +81,8 @@ export default function EcoShopSection() {
         { id: 'charms', label: t('shop.charms') },
     ];
 
-    const pName = (p) => p[`name_${lang}`] || p.name_en;
-    const pBadge = (p) => p.badge ? (p[`badge_${lang}`] || p.badge_en) : null;
+    const pName = (p) => p[`name_${lang}`] || p.name_zh || p.name_es || p.name_en;
+    const pBadge = (p) => p.badge_vi ? (p[`badge_${lang}`] || p.badge_zh || p.badge_es || p.badge_en) : null;
     const catLabel = (catId) => CATEGORIES.find(c => c.id === catId)?.label || catId;
 
     const filtered = PRODUCTS
@@ -90,7 +90,7 @@ export default function EcoShopSection() {
         .filter(p => {
             if (!searchQuery) return true;
             const q = searchQuery.toLowerCase();
-            return p.name_vi.toLowerCase().includes(q) || p.name_en.toLowerCase().includes(q) || (p.name_es || '').toLowerCase().includes(q) || p.artisan.toLowerCase().includes(q);
+            return (p.name_vi?.toLowerCase().includes(q) || p.name_en?.toLowerCase().includes(q) || (p.name_es || '').toLowerCase().includes(q) || (p.name_zh || '').toLowerCase().includes(q) || p.artisan?.toLowerCase().includes(q));
         })
         .filter(p => {
             if (priceFilter === 'all') return true;

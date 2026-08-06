@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function ProductReviews({ productId, productName }) {
     const { user, userProfile } = useAuthUser() || {};
     const { lang } = useLang();
-    const tr = (vi, en, es) => lang === 'vi' ? vi : lang === 'en' ? en : es;
+    const tr = (vi, en, es) => lang === 'vi' ? vi : lang === 'es' ? es : en;
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
