@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import EcoShopSection from '../components/EcoShopSection';
 import { useLang } from '../context/LanguageContext';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 export default function ProductsPage() {
     const { lang } = useLang();
@@ -17,7 +18,9 @@ export default function ProductsPage() {
                 </Link>
             </div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-                <EcoShopSection />
+                <ErrorBoundary>
+                    <EcoShopSection />
+                </ErrorBoundary>
             </motion.div>
         </div>
     );
