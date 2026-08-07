@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { appParams } from '@/lib/app-params';
 import { createAxiosClient } from '@base44/sdk/dist/utils/axios-client';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -88,8 +90,48 @@ export const AuthProvider = ({ children }) => {
     };
 
     const checkUserAuth = async () => {
+        // First check Google Auth
+        const googleToken = Cookies.get('google_session');
+        if (googleToken) {
+            try {
+                const decodedUser = jwtDecode(googleToken);
+                // Map Google user to look like base44 user structure
+                const gUser = {
+                    id: decodedUser.id || decodedUser.sub,
+                    email: decodedUser.email,
+                    full_name: decodedUser.name,
+                    avatar: decodedUser.picture,
+                    isGoogle: true
+                };
+                setUser(gUser);
+                setIsAuthenticated(true);
+                setIsLoadingAuth(false);
+                
+                // Optional: Auto-create in base44 UserProfile if we have a token for base44
+                try {
+                    const profiles = await base44.entities.UserProfile.filter({ user_email: gUser.email });
+                    if (profiles.length === 0) {
+                        await base44.entities.UserProfile.create({
+                            user_email: gUser.email,
+                            full_name: gUser.full_name,
+                            membership_tier: 'silver',
+                            total_orders: 0,
+                            total_spent: 0,
+                        });
+                    }
+                } catch (e) {
+                    console.log('Could not auto-create UserProfile in base44 (maybe missing perm)', e);
+                }
+                
+                return;
+            } catch (e) {
+                console.error('Invalid google session token', e);
+                Cookies.remove('google_session');
+            }
+        }
+
         try {
-            // Now check if the user is authenticated
+            // Now check if the user is authenticated via base44
             setIsLoadingAuth(true);
             const currentUser = await base44.auth.me();
             setUser(currentUser);
@@ -99,20 +141,16 @@ export const AuthProvider = ({ children }) => {
             console.error('User auth check failed:', error);
             setIsLoadingAuth(false);
             setIsAuthenticated(false);
-
-            // If user auth fails, it might be an expired token
-            if (error.status === 401 || error.status === 403) {
-                setAuthError({
-                    type: 'auth_required',
-                    message: 'Authentication required'
-                });
-            }
+            setUser(null);
         }
     };
 
     const logout = (shouldRedirect = true) => {
         setUser(null);
         setIsAuthenticated(false);
+        
+        // Remove Google Session
+        Cookies.remove('google_session');
 
         if (shouldRedirect) {
             // Use the SDK's logout method which handles token cleanup and redirect
@@ -124,8 +162,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const navigateToLogin = () => {
-        // Use the SDK's redirectToLogin method
-        base44.auth.redirectToLogin(window.location.href);
+        // First try Google Login, if not fallback to base44 login
+        window.location.href = '/api/auth/google';
     };
 
     return (

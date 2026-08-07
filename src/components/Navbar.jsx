@@ -34,7 +34,7 @@ export default function Navbar() {
                     <div className="flex-1 flex items-center justify-start">
                         <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">
                             <div className="w-9 h-9 rounded-xl border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-300 overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&q=80" alt="Logo" className="w-full h-full object-cover" />
+                                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
                             </div>
                             <div className="hidden sm:block leading-none">
                                 <span className="text-[15px] font-semibold text-foreground tracking-tight block">Phú Vinh AI</span>

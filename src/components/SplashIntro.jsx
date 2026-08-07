@@ -125,15 +125,10 @@ export default function SplashIntro({ onFinish }) {
                             initial={{ opacity: 0, scale: 0.3, y: 30, filter: 'blur(10px)' }}
                             animate={phase >= 4 ? { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' } : {}}
                             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
-                            <motion.div className="w-20 h-20 rounded-3xl flex items-center justify-center relative"
+                            <motion.div className="w-20 h-20 rounded-3xl flex items-center justify-center relative overflow-hidden"
                                 style={{ background: `linear-gradient(135deg, ${G}20, ${GD}20)`, border: `1px solid ${GD}40`, boxShadow: `0 0 40px ${GD}30`, backdropFilter: 'blur(20px)' }}
                                 animate={{ y: [0, -6, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>
-                                <svg viewBox="0 0 48 48" className="w-10 h-10" fill="none" stroke={GL} strokeWidth="1.5">
-                                    <motion.path d="M8 16 Q24 8 40 16 M8 24 Q24 16 40 24 M8 32 Q24 24 40 32"
-                                        initial={{ pathLength: 0 }} animate={{ pathLength: phase >= 4 ? 1 : 0 }} transition={{ delay: 0.3, duration: 0.8 }} />
-                                    <motion.path d="M16 8 Q8 24 16 40 M24 8 Q16 24 24 40 M32 8 Q24 24 32 40"
-                                        initial={{ pathLength: 0 }} animate={{ pathLength: phase >= 4 ? 1 : 0 }} transition={{ delay: 0.5, duration: 0.8 }} />
-                                </svg>
+                                <img src="/logo.png" alt="Phú Vinh AI Logo" className="w-full h-full object-cover" />
                             </motion.div>
                             <motion.div className="absolute inset-0 rounded-3xl"
                                 style={{ boxShadow: `0 0 0 1px ${GD}30, 0 0 60px ${G}30` }}

@@ -49,13 +49,13 @@ const TIERS = [
 ];
 
 const COMPARISON_ROWS = [
-    { label_vi: 'Giảm giá', label_en: 'Discount', starter: '5%', premium: '10%', elite: '15%' },
-    { label_vi: 'Freeship', label_en: 'Free shipping', starter: '—', premium: '✓', elite: '✓' },
-    { label_vi: 'Hệ số điểm', label_en: 'Points multiplier', starter: '1x', premium: '2x', elite: '3x' },
-    { label_vi: 'Tư vấn thiết kế', label_en: 'Design consult', starter: '—', premium: '✓', elite: 'Riêng biệt' },
-    { label_vi: 'Quà tặng hàng năm', label_en: 'Annual gift', starter: '—', premium: '—', elite: '✓' },
-    { label_vi: 'Bảo hành', label_en: 'Warranty', starter: '12 tháng', premium: '24 tháng', elite: 'Trọn đời' },
-    { label_vi: 'Ưu tiên sản xuất', label_en: 'Priority production', starter: '—', premium: '✓', elite: 'Cao nhất' },
+    { labelKey: 'mem.benefit.discount', starter: '5%', premium: '10%', elite: '15%' },
+    { labelKey: 'mem.benefit.freeship', starter: '—', premium: '✓', elite: '✓' },
+    { labelKey: 'mem.benefit.points', starter: '1x', premium: '2x', elite: '3x' },
+    { labelKey: 'mem.benefit.consult', starter: '—', premium: '✓', elite: 'mem.val.private' },
+    { labelKey: 'mem.benefit.gift', starter: '—', premium: '—', elite: '✓' },
+    { labelKey: 'mem.benefit.warranty', starter: 'mem.val.12mo', premium: 'mem.val.24mo', elite: 'mem.val.lifetime' },
+    { labelKey: 'mem.benefit.production', starter: '—', premium: '✓', elite: 'mem.val.highest' },
 ];
 
 const FAQS = [
@@ -70,8 +70,6 @@ export default function MembershipPage() {
     const [openFaq, setOpenFaq] = useState(0);
     const [selectedTier, setSelectedTier] = useState(null);
     const [signupTier, setSignupTier] = useState(null);
-
-    const tr = (vi, en) => lang === 'vi' ? vi : en;
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-background via-background to-primary/5 pb-20">
@@ -161,7 +159,7 @@ export default function MembershipPage() {
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-secondary/50">
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">{tr('Quyền lợi', 'Benefit')}</th>
+                                    <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">{t('mem.benefit.points')}</th>
                                     <th className="px-4 py-3 text-center text-sm font-semibold text-teal-600">{t('membership.starter')}</th>
                                     <th className="px-4 py-3 text-center text-sm font-semibold text-violet-600 bg-violet-50/30">{t('membership.premium')} ⭐</th>
                                     <th className="px-4 py-3 text-center text-sm font-semibold text-amber-600">{t('membership.elite')} 👑</th>
@@ -170,10 +168,10 @@ export default function MembershipPage() {
                             <tbody>
                                 {COMPARISON_ROWS.map((row, i) => (
                                     <tr key={i} className={i % 2 ? 'bg-secondary/20' : ''}>
-                                        <td className="px-4 py-3 text-sm text-muted-foreground font-medium">{lang === 'vi' ? row.label_vi : row.label_en}</td>
-                                        <td className="px-4 py-3 text-center text-sm text-foreground">{row.starter}</td>
-                                        <td className="px-4 py-3 text-center text-sm text-foreground bg-violet-50/20 font-semibold">{row.premium}</td>
-                                        <td className="px-4 py-3 text-center text-sm text-amber-700 font-bold">{row.elite}</td>
+                                        <td className="px-4 py-3 text-sm text-muted-foreground font-medium">{t(row.labelKey)}</td>
+                                        <td className="px-4 py-3 text-center text-sm text-foreground">{t(row.starter) || row.starter}</td>
+                                        <td className="px-4 py-3 text-center text-sm text-foreground bg-violet-50/20 font-semibold">{t(row.premium) || row.premium}</td>
+                                        <td className="px-4 py-3 text-center text-sm text-amber-700 font-bold">{t(row.elite) || row.elite}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -209,7 +207,7 @@ export default function MembershipPage() {
                         <Shield className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-2">{t('membership.paymentTitle')}</h3>
-                    <p className="text-sm text-muted-foreground mb-6">{tr('Thanh toán an toàn qua chuyển khoản, Momo, ZaloPay, VNPay', 'Secure payment via bank transfer, Momo, ZaloPay, VNPay')}</p>
+                    <p className="text-sm text-muted-foreground mb-6">{t('mem.securePay')}</p>
                     <div className="flex flex-wrap justify-center gap-2">
                         {['🏦 Bank', '📱 Momo', '💚 ZaloPay', '💳 VNPay', '🍎 Apple Pay'].map((m, i) => (
                             <span key={i} className="px-4 py-2 rounded-xl bg-card border border-border text-sm font-medium text-muted-foreground">{m}</span>

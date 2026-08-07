@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Sparkles, WandSparkles, Palette, Layers, Cpu, Eye, Maximize2, Download, RotateCcw, Camera, LayoutGrid, MessageSquare, X, Loader2, RefreshCw, ImageIcon, Upload, Users, Video } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import { base44 } from '@/api/base44Client';
 import { useLang } from '../context/LanguageContext';
 import ArtisanOrderModal from './artisans/ArtisanOrderModal';
@@ -19,12 +20,12 @@ const FEATURES = [
 ];
 
 const SUGGESTIONS = [
-    { icon: '🪑', text: 'Ghế lười tổ chim kiểu Nhật', style: 'Wabi-sabi' },
-    { icon: '🪷', text: 'Đèn chùm hoa sen Boho', style: 'Bohemian' },
-    { icon: '👜', text: 'Túi xách mây mix da bò', style: 'Luxury' },
-    { icon: '🎋', text: 'Xích đu giọt nước hiện đại', style: 'Modern' },
-    { icon: '☀️', text: 'Gương mặt trời tia nắng', style: 'Boho' },
-    { icon: '🍵', text: 'Bàn trà truyền thống Á Đông', style: 'Zen' },
+    { icon: '🪑', textKey: 'hero.sug1.t', style: 'Wabi-sabi' },
+    { icon: '🪷', textKey: 'hero.sug2.t', style: 'Bohemian' },
+    { icon: '👜', textKey: 'hero.sug3.t', style: 'Luxury' },
+    { icon: '🎋', textKey: 'hero.sug4.t', style: 'Modern' },
+    { icon: '☀️', textKey: 'hero.sug5.t', style: 'Boho' },
+    { icon: '🍵', textKey: 'hero.sug6.t', style: 'Zen' },
 ];
 
 const STYLE_PRESETS = [
@@ -92,28 +93,36 @@ export default function HeroSection() {
         }
     };
 
-    const handleGenerate = async () => {
-        if (!prompt.trim() && !uploadedImageUrl) return;
+    const handleGenerate = async (overrides = {}) => {
+        const finalPrompt = overrides.prompt !== undefined ? overrides.prompt : prompt;
+        const finalStyle = overrides.style !== undefined ? overrides.style : selectedStyle;
+        const finalSize = overrides.size !== undefined ? overrides.size : selectedSize;
+        const finalPattern = overrides.pattern !== undefined ? overrides.pattern : selectedPattern;
+        const finalFinish = overrides.finish !== undefined ? overrides.finish : selectedFinish;
+
+        if (!finalPrompt.trim() && !uploadedImageUrl) return;
+
         setGenerating(true);
         setGeneratedImage(null);
         setGeneratedDesc(null);
         setColorPalette(null);
-        const styleNote = selectedStyle ? ` Phong cách: ${selectedStyle}.` : '';
-        const sizeNote = selectedSize ? ` Kích thước: ${selectedSize === 'small' ? 'nhỏ (15-20cm)' : selectedSize === 'medium' ? 'vừa (25-35cm)' : 'lớn (40-60cm)'}.` : '';
-        const patternNote = selectedPattern ? ` Kiểu đan: ${selectedPattern}.` : '';
-        const finishNote = selectedFinish ? ` Hoàn thiện: ${selectedFinish}.` : '';
+        const styleNote = finalStyle ? ` Phong cách: ${finalStyle}.` : '';
+        const sizeNote = finalSize ? ` Kích thước: ${finalSize === 'small' ? 'nhỏ (15-20cm)' : finalSize === 'medium' ? 'vừa (25-35cm)' : 'lớn (40-60cm)'}.` : '';
+        const patternNote = finalPattern ? ` Kiểu đan: ${finalPattern}.` : '';
+        const finishNote = finalFinish ? ` Hoàn thiện: ${finalFinish}.` : '';
         const imageNote = uploadedImageUrl ? ' Tham khảo ảnh đính kèm để lấy cảm hứng thiết kế.' : '';
-        const fullPrompt = `Bạn là chuyên gia thiết kế sản phẩm mây tre đan Phú Vinh, Việt Nam. Tạo một mô tả thiết kế chi tiết, bảng màu gợi ý và ước lượng nguyên liệu + giá cả chi tiết cho sản phẩm: "${prompt || 'sản phẩm mây tre đan'}".${styleNote}${sizeNote}${patternNote}${finishNote}${imageNote} Trả lời JSON với: description (mô tả thiết kế 3-4 câu bằng tiếng Việt), colorPalette (mảng 5 hex màu), materials (mảng 3 vật liệu chính), technique (kỹ thuật đan), materialEstimate (object chứa: items là mảng các {name, weight_kg, length_m, quantity, unit, price_per_kg_vnd (giá mỗi kg nguyên liệu tính bằng VNĐ, VD mây 80.000đ/kg, tre 50.000đ/kg, giang 30.000đ/kg, song 120.000đ/kg), item_cost_vnd (tổng chi phí vật liệu này = weight_kg * price_per_kg_vnd)}, total_weight_kg, estimated_hours, difficulty, total_material_cost_vnd (tổng chi phí nguyên liệu), labor_cost_vnd (chi phí nhân công = estimated_hours * 50.000đ/giờ), total_estimated_cost_vnd (tổng = nguyên liệu + nhân công)).`;
+        const fullPrompt = `Bạn là chuyên gia thiết kế sản phẩm mây tre đan Phú Vinh, Việt Nam. Tạo một mô tả thiết kế chi tiết, bảng màu gợi ý và ước lượng nguyên liệu + giá cả chi tiết cho sản phẩm: "${finalPrompt || 'sản phẩm mây tre đan'}".${styleNote}${sizeNote}${patternNote}${finishNote}${imageNote} Trả lời JSON với: description (mô tả thiết kế 3-4 câu bằng tiếng Việt), colorPalette (mảng 5 hex màu), materials (mảng 3 vật liệu chính), technique (kỹ thuật đan), materialEstimate (object chứa: items là mảng các {name, weight_kg, length_m, quantity, unit, price_per_kg_vnd (giá mỗi kg nguyên liệu tính bằng VNĐ, VD mây 80.000đ/kg, tre 50.000đ/kg, giang 30.000đ/kg, song 120.000đ/kg), item_cost_vnd (tổng chi phí vật liệu này = weight_kg * price_per_kg_vnd)}, total_weight_kg, estimated_hours, difficulty, total_material_cost_vnd (tổng chi phí nguyên liệu), labor_cost_vnd (chi phí nhân công = estimated_hours * 50.000đ/giờ), total_estimated_cost_vnd (tổng = nguyên liệu + nhân công)).`;
         // Generate image using Pollinations AI
-        const safePrompt = encodeURIComponent(`Beautiful handwoven Vietnamese rattan bamboo craft product: ${prompt || 'decorative basket'}. ${selectedStyle ? selectedStyle + ' style.' : ''} Phu Vinh village artisan craftsmanship, intricate weave pattern, bright natural light, white background, luxury product photography, high detail, 4k quality`);
-        const imgUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=1024&height=1024&nologo=true`;
+        const seed = Math.floor(Math.random() * 100000000);
+        const safePrompt = encodeURIComponent(`PRODUCT SHOT ONLY. MASTERPIECE STUDIO PHOTOGRAPHY OF A SINGLE HANDCRAFTED BAMBOO OR RATTAN ITEM. INANIMATE OBJECT ON A CLEAN WHITE STUDIO TABLE. STRICTLY NO HUMANS, NO PEOPLE, NO MODELS, NO FACES, NO HANDS. ITEM DESCRIPTION: ${finalPrompt || 'decorative basket'}. ${finalStyle ? finalStyle + ' style.' : ''} High-end product lighting, intricate weave, 8k resolution, highly detailed.`);
+        const imgUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=1024&height=1024&nologo=true&model=flux&seed=${seed}`;
 
         // Mock LLM response with dynamic details
         const mockDesc = {
-            description: `Sản phẩm "${prompt || 'Giỏ mây tre đan'}" được thiết kế thủ công tinh xảo, mang hơi hướng ${selectedStyle || 'truyền thống'}. Sự kết hợp hoàn hảo giữa kỹ thuật đan lát đặc trưng của làng nghề Phú Vinh và vẻ đẹp tự nhiên của chất liệu mang đến không gian sang trọng, tinh tế.`,
+            description: `Sản phẩm "${finalPrompt || 'Giỏ mây tre đan'}" được thiết kế thủ công tinh xảo, mang hơi hướng ${finalStyle || 'truyền thống'}. Sự kết hợp hoàn hảo giữa kỹ thuật đan lát đặc trưng của làng nghề Phú Vinh và vẻ đẹp tự nhiên của chất liệu mang đến không gian sang trọng, tinh tế.`,
             colorPalette: ['#f8e5c0', '#d4a373', '#8b5a2b', '#5c4033', '#e9edc9'],
             materials: ['Mây rừng tự nhiên', 'Tre già', 'Sợi dù'],
-            technique: `Kỹ thuật đan ${selectedPattern || 'truyền thống'} với độ hoàn thiện ${selectedFinish || 'tự nhiên'} cao cấp.`,
+            technique: `Kỹ thuật đan ${finalPattern || 'truyền thống'} với độ hoàn thiện ${finalFinish || 'tự nhiên'} cao cấp.`,
             materialEstimate: {
                 items: [
                     { name: 'Mây rừng', weight_kg: 1.5, length_m: 200, quantity: 1, unit: 'cuộn', price_per_kg_vnd: 80000, item_cost_vnd: 120000 },
@@ -138,16 +147,13 @@ export default function HeroSection() {
             setGenerating(false);
         };
         img.onerror = () => {
-            // Fallback if Pollinations fails
-            setGeneratedImage('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80');
-            setGeneratedDesc(mockDesc);
-            setColorPalette(mockDesc.colorPalette);
+            toast.error(lang === 'vi' ? 'Tạo ảnh thất bại do sự cố mạng. Vui lòng thử lại!' : 'Failed to generate image due to network issue. Please try again!');
             setGenerating(false);
         };
     };
 
     const handleSuggestion = (s) => {
-        setPrompt(s.text);
+        setPrompt(t(s.textKey));
         setSelectedStyle(s.style);
     };
 
@@ -307,7 +313,7 @@ export default function HeroSection() {
                                 <X className="w-4 h-4" />
                             </button>
                         )}
-                        <button onClick={handleGenerate} disabled={generating || (!prompt.trim() && !uploadedImageUrl)}
+                        <button onClick={() => handleGenerate({})} disabled={generating || (!prompt.trim() && !uploadedImageUrl)}
                             className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-emerald-600 text-white px-3 sm:px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-primary/30 transition-all text-xs sm:text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex-shrink-0">
                             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                             <span className="hidden sm:inline">{generating ? t('hero.generating') : t('hero.generate')}</span>
@@ -329,8 +335,8 @@ export default function HeroSection() {
                                 <button key={i} onClick={() => handleSuggestion(s)}
                                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-green-200 text-sm font-medium text-gray-700 hover:text-primary hover:border-primary/40 hover:bg-green-50 transition-all duration-200 shadow-sm">
                                     <span>{s.icon}</span>
-                                    <span className="hidden sm:inline">{s.text}</span>
-                                    <span className="sm:hidden">{s.text.split(' ').slice(0, 2).join(' ')}</span>
+                                    <span className="hidden sm:inline">{t(s.textKey)}</span>
+                                    <span className="sm:hidden">{(t(s.textKey) || '').split(' ').slice(0, 2).join(' ')}</span>
                                     <span className="text-xs text-primary/60 font-normal">· {s.style}</span>
                                 </button>
                             ))}
@@ -464,17 +470,17 @@ export default function HeroSection() {
                                             <AIDesignEditor
                                                 design={{ prompt, colorPalette, style: selectedStyle, size: selectedSize, pattern: selectedPattern, finish: selectedFinish }}
                                                 onRegenerate={(settings) => {
-                                                    if (settings.prompt) setPrompt(settings.prompt);
-                                                    if (settings.style) setSelectedStyle(settings.style);
-                                                    if (settings.size) setSelectedSize(settings.size);
-                                                    if (settings.pattern) setSelectedPattern(settings.pattern);
-                                                    if (settings.finish) setSelectedFinish(settings.finish);
-                                                    setTimeout(() => handleGenerate(), 100);
+                                                    if (settings.prompt !== undefined) setPrompt(settings.prompt);
+                                                    if (settings.style !== undefined) setSelectedStyle(settings.style);
+                                                    if (settings.size !== undefined) setSelectedSize(settings.size);
+                                                    if (settings.pattern !== undefined) setSelectedPattern(settings.pattern);
+                                                    if (settings.finish !== undefined) setSelectedFinish(settings.finish);
+                                                    handleGenerate(settings);
                                                 }}
                                                 loading={generating}
                                             />
                                             <div className="flex gap-2">
-                                                <button onClick={handleGenerate}
+                                                <button onClick={() => handleGenerate({})}
                                                     className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-primary/10 border border-primary/20 text-primary text-sm font-semibold hover:bg-primary/20 transition-all">
                                                     <RefreshCw className="w-3.5 h-3.5" /> {t('ai.regenerate')}
                                                 </button>
@@ -513,12 +519,12 @@ export default function HeroSection() {
                     generatedImage={generatedImage}
                     generatedDesc={generatedDesc}
                     onRegenerate={(settings) => {
-                        if (settings.prompt) setPrompt(settings.prompt);
-                        if (settings.style) setSelectedStyle(settings.style);
-                        if (settings.size) setSelectedSize(settings.size);
-                        if (settings.pattern) setSelectedPattern(settings.pattern);
-                        if (settings.finish) setSelectedFinish(settings.finish);
-                        setTimeout(() => handleGenerate(), 100);
+                        if (settings.prompt !== undefined) setPrompt(settings.prompt);
+                        if (settings.style !== undefined) setSelectedStyle(settings.style);
+                        if (settings.size !== undefined) setSelectedSize(settings.size);
+                        if (settings.pattern !== undefined) setSelectedPattern(settings.pattern);
+                        if (settings.finish !== undefined) setSelectedFinish(settings.finish);
+                        handleGenerate(settings);
                     }}
                     onClose={() => setDesignStudioOpen(false)}
                     loading={generating}

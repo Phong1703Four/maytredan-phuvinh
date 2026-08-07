@@ -1,0 +1,165 @@
+{
+  "startNode": "spot_1",
+  "nodes": {
+    "spot_1": {
+      "id": "spot_1",
+      "name": "Cổng Làng Phú Vinh",
+      "image": "https://images.unsplash.com/photo-1753939846442-bc1691f70c5f?w=2400&q=80",
+      "initialView": { "yaw": 0, "pitch": 0, "fov": 75 },
+      "neighbors": ["spot_2"],
+      "hotspots": [
+        {
+          "type": "move",
+          "yaw": 45,
+          "pitch": -5,
+          "targetId": "spot_2",
+          "title": "Đi đến Xưởng Đan"
+        },
+        {
+          "type": "info",
+          "yaw": 0,
+          "pitch": 0,
+          "title": "Cổng Làng 400 năm tuổi",
+          "description": "Cổng làng truyền thống với kiến trúc gỗ lim, biểu tượng của sự bền vững."
+        }
+      ]
+    },
+    "spot_2": {
+      "id": "spot_2",
+      "name": "Xưởng Đan Nghệ Nhân",
+      "image": "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=2400&q=80",
+      "initialView": { "yaw": -90, "pitch": 0, "fov": 75 },
+      "neighbors": ["spot_1", "spot_3"],
+      "hotspots": [
+        {
+          "type": "move",
+          "yaw": -135,
+          "pitch": -10,
+          "targetId": "spot_1",
+          "title": "Quay lại Cổng Làng"
+        },
+        {
+          "type": "move",
+          "yaw": 90,
+          "pitch": 0,
+          "targetId": "spot_3",
+          "title": "Đi đến Showroom"
+        },
+        {
+          "type": "video",
+          "yaw": -30,
+          "pitch": -5,
+          "title": "Kỹ thuật đan xương cá",
+          "url": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+        }
+      ]
+    },
+    "spot_3": {
+      "id": "spot_3",
+      "name": "Showroom Sản Phẩm",
+      "image": "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=2400&q=80",
+      "initialView": { "yaw": 0, "pitch": 0, "fov": 75 },
+      "neighbors": ["spot_2", "spot_5"],
+      "hotspots": [
+        {
+          "type": "move",
+          "yaw": -90,
+          "pitch": -5,
+          "targetId": "spot_2",
+          "title": "Quay lại Xưởng"
+        },
+        {
+          "type": "move",
+          "yaw": 45,
+          "pitch": -10,
+          "targetId": "spot_5",
+          "title": "Ra Chợ Làng"
+        },
+        {
+          "type": "product",
+          "yaw": 10,
+          "pitch": -15,
+          "title": "Khung Ảnh Tre Mini",
+          "productId": 5,
+          "price": "21.000đ"
+        }
+      ]
+    },
+    "spot_4": {
+      "id": "spot_4",
+      "name": "Vườn Tre Nguyên Liệu",
+      "image": "https://images.unsplash.com/photo-1777958337331-4631084d67a5?w=2400&q=80",
+      "initialView": { "yaw": 180, "pitch": 0, "fov": 80 },
+      "neighbors": ["spot_5"],
+      "hotspots": [
+        {
+          "type": "move",
+          "yaw": 0,
+          "pitch": -5,
+          "targetId": "spot_5",
+          "title": "Đi ra Chợ"
+        },
+        {
+          "type": "info",
+          "yaw": 150,
+          "pitch": 10,
+          "title": "Tre luồng cao 10m",
+          "description": "Nguồn nguyên liệu chính cho các khung sản phẩm cỡ lớn."
+        }
+      ]
+    },
+    "spot_5": {
+      "id": "spot_5",
+      "name": "Chợ Làng Phú Vinh",
+      "image": "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=2400&q=80",
+      "initialView": { "yaw": 0, "pitch": 0, "fov": 75 },
+      "neighbors": ["spot_3", "spot_4", "spot_6"],
+      "hotspots": [
+        {
+          "type": "move",
+          "yaw": 180,
+          "pitch": 0,
+          "targetId": "spot_3",
+          "title": "Về Showroom"
+        },
+        {
+          "type": "move",
+          "yaw": 90,
+          "pitch": 5,
+          "targetId": "spot_6",
+          "title": "Đi đến Đình Làng"
+        },
+        {
+          "type": "move",
+          "yaw": -90,
+          "pitch": -5,
+          "targetId": "spot_4",
+          "title": "Khám phá Vườn Tre"
+        }
+      ]
+    },
+    "spot_6": {
+      "id": "spot_6",
+      "name": "Đình Làng Phú Vinh",
+      "image": "https://images.unsplash.com/photo-1605648916361-9bc12ad63628?w=2400&q=80",
+      "initialView": { "yaw": 0, "pitch": 0, "fov": 75 },
+      "neighbors": ["spot_5"],
+      "hotspots": [
+        {
+          "type": "move",
+          "yaw": 180,
+          "pitch": -10,
+          "targetId": "spot_5",
+          "title": "Trở lại Chợ"
+        },
+        {
+          "type": "info",
+          "yaw": 0,
+          "pitch": 5,
+          "title": "Bàn thờ Tổ nghề",
+          "description": "Nơi thờ cúng ông tổ nghề đan lát của làng."
+        }
+      ]
+    }
+  }
+}

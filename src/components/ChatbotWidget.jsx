@@ -64,24 +64,27 @@ You are NOT just answering questions. You are a PROACTIVE sales expert who:
    - How it solves their problem or matches their taste
 
 4. CROSS-SELLS & UPSELLS naturally:
-   - If they like a toy, suggest a matching basket for storage
-   - If they want decor, suggest a complementary piece
-   - If they're gifting, suggest wrapping or a set
-   - Only suggest when genuinely helpful, never pushy
+   - If they like a toy, suggest a matching basket for storage.
+   - If they want decor, suggest a complementary piece.
+   - If they're gifting, suggest wrapping or a set.
+   - ONLY suggest when genuinely helpful, never pushy.
 
-5. ACTS LIKE A REAL EXPERT:
-   - Natural, warm, professional language
-   - Concise but rich in value (3-5 sentences typically)
-   - Share cultural stories or craftsmanship details when relevant
-   - Build trust through expertise, not sales pressure
-   - Always prioritize helping the customer find the RIGHT solution
+5. ACTS LIKE A HIGH-END, EMPATHETIC CONSULTANT:
+   - Be extremely warm, personal, and conversational. Speak like a friendly human expert.
+   - Show genuine interest in the customer's story (e.g. "That sounds like a lovely gift for your mother!").
+   - Concise but rich in value (2-4 sentences typically). Do not write long essays.
+   - Share cultural stories or craftsmanship details only when it adds emotional value.
+   - Build trust through empathy and expertise, NEVER through sales pressure.
 
 6. HANDLES OBJECTIONS gracefully:
    - Price concerns: highlight value, durability, cultural significance
    - Quality doubts: explain craftsmanship, warranty, certification
    - Uncertainty: ask clarifying questions to narrow down
 
-ALWAYS respond in the SAME LANGUAGE as the user's message. Return JSON with: reply (your response), productIds (array of product id numbers to suggest). When you recommend products, explain WHY each is a good fit in your reply text.`;
+ALWAYS respond in the SAME LANGUAGE as the user's message. 
+If you recommend any products, you MUST append their IDs at the VERY END of your response in this exact format: [PRODUCTS: id1, id2]. 
+Example: "This basket is great for you! [PRODUCTS: 2, 5]"
+Do NOT use markdown JSON blocks. Respond naturally and empathetically as a human expert.`;
 
 export default function ChatbotWidget() {
     const { t, lang } = useLang();
@@ -146,13 +149,56 @@ export default function ChatbotWidget() {
         const langInstruction = langMap[lang] || langMap.vi;
 
         try {
-            const systemPrompt = `Bạn là chuyên gia tư vấn bán hàng mây tre đan Phú Vinh. ${langInstruction} Trả lời ngắn gọn, thân thiện, súc tích (tối đa 3 câu). Không dùng định dạng markdown phức tạp. Khách hàng hỏi: ${userText}`;
-            const res = await fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(systemPrompt)}?model=openai`);
-            const replyText = await res.text();
+            const systemPrompt = `${SYSTEM_PROMPT}\n\n${contextSummary}\n\n${langInstruction}\n\nUser: ${userText}`;
+            const res = await fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(systemPrompt)}`);
+            let replyText = await res.text();
             
-            setMessages(prev => [...prev, { role: 'assistant', content: replyText }]);
+            if (!res.ok || replyText.includes('402') || replyText.includes('"error"')) {
+                throw new Error("API Error");
+            }
             
-            // Basic local product recommendation based on keywords
+            // The LLM responds natively as text now
+            let finalReply = replyText;
+            let matchedIds = [];
+            
+            // Extract the [PRODUCTS: 1, 2] part if it exists
+            const productMatch = finalReply.match(/\[PRODUCTS:\s*([\d,\s]+)\]/);
+            if (productMatch) {
+                // Parse the IDs and remove the bracketed text from the chat reply
+                const idString = productMatch[1];
+                matchedIds = idString.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+                finalReply = finalReply.replace(productMatch[0], '').trim();
+            }
+            
+            setMessages(prev => [...prev, { role: 'assistant', content: finalReply }]);
+            
+            // Basic local product recommendation based on keywords (fallback)
+            if (matchedIds.length === 0) {
+                const textLower = userText.toLowerCase();
+                if (textLower.includes('voi') || textLower.includes('chơi')) matchedIds.push(1);
+                if (textLower.includes('hoa') || textLower.includes('trang trí')) matchedIds.push(2);
+                if (textLower.includes('bút') || textLower.includes('văn phòng')) matchedIds.push(3);
+                if (textLower.includes('tường') || textLower.includes('phượng')) matchedIds.push(4);
+                if (textLower.includes('ảnh') || textLower.includes('khung')) matchedIds.push(5);
+                if (textLower.includes('rổ') || textLower.includes('đựng')) matchedIds.push(6);
+                
+                // Randomly suggest if asking for price/gift and no match
+                if (matchedIds.length === 0 && (textLower.includes('quà') || textLower.includes('giá') || textLower.includes('rẻ'))) {
+                    matchedIds.push(1, 2);
+                }
+            }
+            
+            if (matchedIds.length > 0) {
+                setSuggestedProducts(PRODUCTS.filter(p => matchedIds.includes(p.id)));
+            }
+        } catch (error) {
+            // Fallback response if API fails
+            const fallbackMsg = lang === 'vi' 
+                ? 'Cảm ơn bạn! Mây Tre Đan Phú Vinh luôn sẵn sàng hỗ trợ. Dưới đây là một số gợi ý cho bạn:' 
+                : 'Thank you! We are always ready to help. Here are some suggestions for you:';
+            setMessages(prev => [...prev, { role: 'assistant', content: fallbackMsg }]);
+            
+            // Still run local product recommendation even if API fails
             const textLower = userText.toLowerCase();
             const matchedIds = [];
             if (textLower.includes('voi') || textLower.includes('chơi')) matchedIds.push(1);
@@ -161,17 +207,8 @@ export default function ChatbotWidget() {
             if (textLower.includes('tường') || textLower.includes('phượng')) matchedIds.push(4);
             if (textLower.includes('ảnh') || textLower.includes('khung')) matchedIds.push(5);
             if (textLower.includes('rổ') || textLower.includes('đựng')) matchedIds.push(6);
-            
-            // Randomly suggest if asking for price/gift and no match
-            if (matchedIds.length === 0 && (textLower.includes('quà') || textLower.includes('giá') || textLower.includes('rẻ'))) {
-                matchedIds.push(1, 2);
-            }
-            
-            if (matchedIds.length > 0) {
-                setSuggestedProducts(PRODUCTS.filter(p => matchedIds.includes(p.id)));
-            }
-        } catch (error) {
-            setMessages(prev => [...prev, { role: 'assistant', content: 'Xin lỗi, hiện tại tôi đang bận. Vui lòng thử lại sau nhé!' }]);
+            if (matchedIds.length === 0) matchedIds.push(1, 2);
+            setSuggestedProducts(PRODUCTS.filter(p => matchedIds.includes(p.id)));
         }
         
         setLoading(false);
@@ -305,12 +342,16 @@ export default function ChatbotWidget() {
             )}
 
             {!open && (
-                <button
-                    onClick={() => setOpen(true)}
-                    className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-violet-600 to-purple-700 text-white shadow-xl flex items-center justify-center hover:scale-110 transition-transform shadow-purple-500/30"
-                >
-                    <MessageCircle className="w-6 h-6" />
-                </button>
+                <div className="fixed bottom-6 left-6 z-50 flex items-center">
+                    <button
+                        onClick={() => setOpen(true)}
+                        className="relative flex items-center gap-2.5 px-6 py-3.5 rounded-[1.5rem] bg-[#8B3DFF] text-white shadow-xl hover:scale-105 hover:bg-[#7e34ef] transition-all shadow-purple-500/30 font-bold"
+                    >
+                        <MessageCircle className="w-5 h-5" />
+                        <span className="text-base whitespace-nowrap tracking-wide">{lang === 'vi' ? 'Tư vấn AI' : 'AI Consult'}</span>
+                        <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#4ADE80] border-2 border-white rounded-full shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                    </button>
+                </div>
             )}
         </>
     );

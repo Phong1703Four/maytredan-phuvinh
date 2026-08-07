@@ -20,6 +20,32 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import CommunityPage from './pages/CommunityPage';
 import Layout from './components/Layout';
 
+import { useEffect } from 'react';
+import { useToast } from "@/components/ui/use-toast";
+import { useSearchParams } from 'react-router-dom';
+
+const ErrorHandler = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error === 'missing_google_env') {
+      toast({
+        title: "Lỗi cấu hình hệ thống",
+        description: "Tính năng Đăng nhập bằng Google hiện chưa được quản trị viên cấu hình (thiếu GOOGLE_CLIENT_ID). Vui lòng thử đăng nhập bằng tài khoản thông thường.",
+        variant: "destructive",
+        duration: 8000
+      });
+      // Remove error from URL
+      searchParams.delete('error');
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams, toast]);
+  
+  return null;
+};
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
@@ -45,9 +71,11 @@ const AuthenticatedApp = () => {
 
   // Render the main app
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
+    <>
+      <ErrorHandler />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/village" element={<VillagePage />} />
         <Route path="/support" element={<SupportPage />} />
@@ -60,6 +88,7 @@ const AuthenticatedApp = () => {
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Routes>
+    </>
   );
 };
 
