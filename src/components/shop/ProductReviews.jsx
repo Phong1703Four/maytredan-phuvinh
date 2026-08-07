@@ -19,7 +19,7 @@ export default function ProductReviews({ productId, productName }) {
     const [success, setSuccess] = useState(false);
 
     useEffect(() => {
-        if (!base44.entities.Review) {
+        if (!base44?.entities?.Review) {
             setLoading(false);
             return;
         }
@@ -30,7 +30,7 @@ export default function ProductReviews({ productId, productName }) {
     const handleSubmit = async () => {
         if (!comment.trim()) return;
         setSubmitting(true);
-        if (!base44.entities.Review) {
+        if (!base44?.entities?.Review) {
             setSubmitting(false);
             return;
         }

@@ -21,7 +21,10 @@ export default function MyOrdersModal({ onClose }) {
     useEffect(() => {
         const email = user?.email || user?.email_address || user?.username || (typeof window !== 'undefined' ? window.localStorage.getItem('phuvinh_last_email') : null);
         if (!email) { setLoading(false); return; }
-        
+        if (!base44?.entities?.Order) {
+            setLoading(false);
+            return;
+        }
         base44.entities.Order.filter({ customer_email: email }, '-created_date', 50)
             .then(res => setOrders(res || []))
             .catch(err => {
