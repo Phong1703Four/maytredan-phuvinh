@@ -44,7 +44,7 @@ export default function UserMenu({ onOpenAuth }) {
                     {tierInfo.emoji}
                 </div>
                 <span className="text-sm font-medium text-gray-700 hidden sm:block max-w-[100px] truncate">
-                    {userProfile?.full_name?.split(' ').pop() || user.email?.split('@')[0]}
+                    {userProfile?.full_name?.split(' ').pop() || user?.full_name?.split(' ').pop() || user?.name?.split(' ').pop() || user?.email?.split('@')[0] || t('user.guest') || 'Guest'}
                 </span>
                 <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
             </button>
@@ -55,7 +55,7 @@ export default function UserMenu({ onOpenAuth }) {
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">{tierInfo.emoji}</div>
                             <div>
-                                <p className="font-bold text-sm">{userProfile?.full_name || user.email?.split('@')[0]}</p>
+                                <p className="font-bold text-sm">{userProfile?.full_name || user?.full_name || user?.name || user?.email?.split('@')[0] || t('user.guest') || 'Guest'}</p>
                                 <p className="text-white/80 text-xs">{t('user.tier')} {tierInfo.name} · {totalOrders} {t('user.orders')}</p>
                             </div>
                         </div>

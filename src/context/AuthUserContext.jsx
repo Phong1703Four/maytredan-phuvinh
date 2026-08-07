@@ -79,7 +79,11 @@ export function AuthUserProvider({ children }) {
     useEffect(() => { loadUser(); }, []);
 
     const logout = async () => {
-        try { await base44.auth.logout(); } catch { }
+        // Remove local storage tokens manually to avoid SDK redirecting to /api/apps/auth/logout
+        if (typeof window !== 'undefined') {
+            window.localStorage.removeItem('base44_access_token');
+            window.localStorage.removeItem('token');
+        }
         Cookies.remove('google_session');
         setUser(null);
         setUserProfile(null);
