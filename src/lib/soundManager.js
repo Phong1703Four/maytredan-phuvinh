@@ -130,7 +130,8 @@ export const startAmbientMusic = () => {
     
     try {
         if (!bgMusicAudio) {
-            bgMusicAudio = new Audio('/healing.mp3');
+            bgMusicAudio = new Audio('https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3');
+            bgMusicAudio.crossOrigin = 'anonymous';
             bgMusicAudio.loop = true;
         }
         bgMusicAudio.volume = musicVolume;
