@@ -65,11 +65,20 @@ export function AuthUserProvider({ children }) {
             const isAuth = await base44.auth.isAuthenticated();
             if (!isAuth) { setUser(null); setUserProfile(null); return; }
             const me = await base44.auth.me();
-            setUser(me);
             
-            // Ultra-robust email fallback to ensure we ALWAYS find the profile
+            // Ultra-robust email and name fallback
             const cachedEmail = typeof window !== 'undefined' ? window.localStorage.getItem('phuvinh_last_email') : null;
-            const targetEmail = me.email || me.email_address || me.username || cachedEmail;
+            const cachedName = typeof window !== 'undefined' ? window.localStorage.getItem('phuvinh_last_name') : null;
+            
+            const targetEmail = me?.email || me?.email_address || me?.username || cachedEmail;
+            
+            // Reconstruct user if missing fields
+            const enrichedUser = {
+                ...me,
+                email: targetEmail,
+                full_name: me?.full_name || me?.name || cachedName || 'Guest'
+            };
+            setUser(enrichedUser);
             
             if (targetEmail) {
                 const profiles = await base44.entities.UserProfile.filter({ user_email: targetEmail });

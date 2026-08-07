@@ -25,8 +25,7 @@ export default function VouchersPage() {
     const authCtx = useAuthUser() || {};
     const userProfile = authCtx?.userProfile;
     const user = authCtx?.user;
-    const emailStr = typeof user?.email === 'string' ? user.email.split('@')[0] : '';
-    const userName = userProfile?.full_name || user?.full_name || user?.name || emailStr || t('user.guest') || 'Guest';
+    const userName = userProfile?.full_name || user?.full_name || user?.name || user?.email?.split('@')[0] || (lang === 'vi' ? 'Khách' : 'Guest');
     const tier = userProfile?.membership_tier || 'bronze';
     const tierInfo = TIERS[tier] || TIERS.bronze;
     const totalSpent = userProfile?.total_spent || 0;

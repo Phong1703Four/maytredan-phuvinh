@@ -77,7 +77,7 @@ const CONTENT = {
 
 export default function PrivacyPolicy() {
     const { lang, t } = useLang();
-    const c = CONTENT[lang];
+    const c = CONTENT[lang] || CONTENT.vi;
 
     return (
         <div className="min-h-screen bg-background text-foreground pt-20 pb-16">

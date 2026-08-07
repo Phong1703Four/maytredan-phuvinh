@@ -48,7 +48,10 @@ export default function AuthModal({ onClose }) {
                     total_orders: 0, total_spent: 0, membership_tier: 'bronze', vouchers: [],
                 });
             }
-            if (typeof window !== 'undefined') window.localStorage.setItem('phuvinh_last_email', form.email);
+            if (typeof window !== 'undefined') {
+                window.localStorage.setItem('phuvinh_last_email', form.email);
+                window.localStorage.setItem('phuvinh_last_name', form.full_name || form.email.split('@')[0]);
+            }
             await loadUser();
             onClose();
         } catch (err) {
