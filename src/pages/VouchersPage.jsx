@@ -24,6 +24,8 @@ export default function VouchersPage() {
     const tx = VT[lang] || VT.vi;
     const authCtx = useAuthUser() || {};
     const userProfile = authCtx?.userProfile;
+    const user = authCtx?.user;
+    const userName = userProfile?.full_name || user?.full_name || user?.name || user?.email?.split('@')[0] || t('user.guest') || 'Guest';
     const tier = userProfile?.membership_tier || 'bronze';
     const tierInfo = TIERS[tier];
     const totalSpent = userProfile?.total_spent || 0;
@@ -82,8 +84,9 @@ export default function VouchersPage() {
                             {tierInfo.emoji}
                         </div>
                         <div>
+                            <p className="text-white/90 text-lg font-bold mb-0.5">{userName}</p>
                             <p className="text-white/70 text-xs uppercase tracking-wider">{t('user.tier')} {tierInfo.name}</p>
-                            <p className="text-3xl font-black">{allVouchers.length} {tx.voucher}</p>
+                            <p className="text-3xl font-black mt-1">{allVouchers.length} {tx.voucher}</p>
                             <p className="text-white/80 text-sm">{totalOrders} {tx.orders} · {totalSpent?.toLocaleString('vi-VN')}đ {tx.spent}</p>
                         </div>
                     </div>

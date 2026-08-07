@@ -19,9 +19,16 @@ export default function MyOrdersModal({ onClose }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user?.email) { setLoading(false); return; }
-        base44.entities.Order.filter({ customer_email: user.email }, '-created_date', 50)
-            .then(setOrders).finally(() => setLoading(false));
+        const email = user?.email || user?.email_address || user?.username || (typeof window !== 'undefined' ? window.localStorage.getItem('phuvinh_last_email') : null);
+        if (!email) { setLoading(false); return; }
+        
+        base44.entities.Order.filter({ customer_email: email }, '-created_date', 50)
+            .then(res => setOrders(res || []))
+            .catch(err => {
+                console.error("Failed to load orders", err);
+                setOrders([]);
+            })
+            .finally(() => setLoading(false));
     }, [user]);
 
     return (
@@ -54,13 +61,14 @@ export default function MyOrdersModal({ onClose }) {
                     {orders.map((order, i) => {
                         const st = STATUS[order.status] || STATUS.pending;
                         const Icon = st.icon;
+                        const dateStr = order.created_date ? new Date(order.created_date).toLocaleDateString('vi-VN') : new Date().toLocaleDateString('vi-VN');
                         return (
                             <motion.div key={order.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
                                 className="border border-gray-100 rounded-2xl p-4 space-y-3 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-xs text-gray-400">#{(order.id || '').slice(-8).toUpperCase()}</p>
-                                        <p className="text-xs text-gray-500">{new Date(order.created_date).toLocaleDateString('vi-VN')}</p>
+                                        <p className="text-xs text-gray-500">{dateStr}</p>
                                     </div>
                                     <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-semibold ${st.color}`}>
                                         <Icon className="w-3 h-3" />{st.label}
