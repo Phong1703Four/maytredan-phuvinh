@@ -58,9 +58,8 @@ export const isMusicEnabled = () => musicEnabled;
 export const setMusicVolume = (v) => {
     musicVolume = Math.max(0, Math.min(1, v));
     try { localStorage.setItem(MUSIC_VOL_KEY, String(musicVolume)); } catch (e) { }
-    // Only control the master gain, NOT individual node gains
-    if (masterGainRef) {
-        try { masterGainRef.gain.setValueAtTime(musicVolume, getCtx()?.currentTime || 0); } catch (e) { }
+    if (bgMusicAudio) {
+        try { bgMusicAudio.volume = musicVolume; } catch (e) { }
     }
 };
 export const getMusicVolume = () => musicVolume;
@@ -124,106 +123,38 @@ export const playSuccess = () => {
 };
 
 // === Healing ambient music ===
-// Soft warm pad with gentle reverb + sparse pentatonic melody
+let bgMusicAudio = null;
+
 export const startAmbientMusic = () => {
-    const ctx = getCtx();
-    if (!ctx) return;
-    stopAmbientMusic();
-    ambientNodes = [];
-
+    if (!musicEnabled) return;
+    
     try {
-        // Master gain — THE ONLY volume control
-        const masterGain = ctx.createGain();
-        masterGain.gain.setValueAtTime(musicVolume, ctx.currentTime);
-        masterGainRef = masterGain;
-
-        // Lowpass filter to soften all tones
-        const lpFilter = ctx.createBiquadFilter();
-        lpFilter.type = 'lowpass';
-        lpFilter.frequency.setValueAtTime(800, ctx.currentTime);
-        lpFilter.Q.setValueAtTime(0.5, ctx.currentTime);
-        masterGain.connect(lpFilter);
-        lpFilter.connect(ctx.destination);
-
-        // Simple reverb: delay + feedback
-        const delay = ctx.createDelay(2);
-        delay.delayTime.setValueAtTime(0.45, ctx.currentTime);
-        const feedback = ctx.createGain();
-        feedback.gain.setValueAtTime(0.3, ctx.currentTime);
-        const reverbGain = ctx.createGain();
-        reverbGain.gain.setValueAtTime(0.35, ctx.currentTime);
-        lpFilter.connect(delay);
-        delay.connect(feedback);
-        feedback.connect(delay);
-        delay.connect(reverbGain);
-        reverbGain.connect(ctx.destination);
-
-        // --- Warm drone pad (triangle waves, very low freq) ---
-        const droneFreqs = [55, 82.41, 110]; // A1, E2, A2
-        droneFreqs.forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            const lfo = ctx.createOscillator();
-            const lfoGain = ctx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(freq, ctx.currentTime);
-            lfo.frequency.setValueAtTime(0.04 + i * 0.012, ctx.currentTime);
-            lfoGain.gain.setValueAtTime(0.015, ctx.currentTime);
-            const baseVol = [0.05, 0.03, 0.02][i];
-            gain.gain.setValueAtTime(baseVol, ctx.currentTime);
-            lfo.connect(lfoGain);
-            lfoGain.connect(gain.gain);
-            osc.connect(gain);
-            gain.connect(masterGain);
-            osc.start();
-            lfo.start();
-            ambientNodes.push({ osc, lfo });
-        });
-
-        // --- Sparse pentatonic melody ---
-        const pentatonic = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99];
-        const playMelodyNote = () => {
-            if (!musicEnabled || !masterGainRef) return;
-            const ctx2 = getCtx();
-            if (!ctx2) return;
-            const t = ctx2.currentTime;
-            const freq = pentatonic[Math.floor(Math.random() * pentatonic.length)];
-            // Main note
-            const osc = ctx2.createOscillator();
-            const gain = ctx2.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, t);
-            gain.gain.setValueAtTime(0, t);
-            gain.gain.linearRampToValueAtTime(0.03, t + 0.3);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 5);
-            osc.connect(gain);
-            gain.connect(masterGainRef);
-            osc.start(t);
-            osc.stop(t + 5.5);
-            // Soft harmonic
-            const osc2 = ctx2.createOscillator();
-            const gain2 = ctx2.createGain();
-            osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(freq * 2, t);
-            gain2.gain.setValueAtTime(0, t);
-            gain2.gain.linearRampToValueAtTime(0.01, t + 0.4);
-            gain2.gain.exponentialRampToValueAtTime(0.001, t + 3.5);
-            osc2.connect(gain2);
-            gain2.connect(masterGainRef);
-            osc2.start(t);
-            osc2.stop(t + 4);
-            // Schedule next note
-            musicLoopTimer = setTimeout(playMelodyNote, 4000 + Math.random() * 5000);
-        };
-        musicLoopTimer = setTimeout(playMelodyNote, 2000);
-    } catch (e) { }
+        if (!bgMusicAudio) {
+            bgMusicAudio = new Audio('/healing.mp3');
+            bgMusicAudio.loop = true;
+        }
+        bgMusicAudio.volume = musicVolume;
+        
+        // Browsers might block autoplay if no interaction happened
+        const playPromise = bgMusicAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(e => {
+                console.warn("Auto-play was prevented by browser:", e);
+                // Pause it so the state remains consistent
+                bgMusicAudio.pause();
+            });
+        }
+    } catch (e) {
+        console.error("Failed to start ambient music:", e);
+    }
 };
 
 export const stopAmbientMusic = () => {
-    if (musicLoopTimer) { clearTimeout(musicLoopTimer); musicLoopTimer = null; }
-    ambientNodes.forEach(n => {
-        try { if (n.osc) n.osc.stop(); if (n.lfo) n.lfo.stop(); } catch (e) { }
-    });
-    ambientNodes = [];
-    masterGainRef = null;
+    if (bgMusicAudio) {
+        try {
+            bgMusicAudio.pause();
+        } catch (e) {
+            console.error("Failed to stop ambient music:", e);
+        }
+    }
 };
