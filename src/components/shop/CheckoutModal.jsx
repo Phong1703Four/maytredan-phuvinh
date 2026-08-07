@@ -47,7 +47,8 @@ export default function CheckoutModal({ cart, onClose, onSuccess }) {
 
     const tier = userProfile?.membership_tier || 'bronze';
     const tierInfo = TIERS[tier];
-    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const validCart = Array.isArray(cart) ? cart : [];
+    const subtotal = validCart.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
     const shippingFee = tierInfo.freeship ? 0 : 15000;
 
     let discountAmount = 0;

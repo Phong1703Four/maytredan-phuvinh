@@ -24,7 +24,7 @@ export default function ProductReviews({ productId, productName }) {
             return;
         }
         base44.entities.Review.filter({ product_id: productId }, '-created_date', 20)
-            .then(res => setReviews(res || [])).catch(() => setReviews([])).finally(() => setLoading(false));
+            .then(res => setReviews(Array.isArray(res) ? res : (res?.items || res?.data || []))).catch(() => setReviews([])).finally(() => setLoading(false));
     }, [productId]);
 
     const handleSubmit = async () => {
@@ -56,7 +56,8 @@ export default function ProductReviews({ productId, productName }) {
         }
     };
 
-    const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : null;
+    const validReviews = Array.isArray(reviews) ? reviews : [];
+    const avg = validReviews.length ? (validReviews.reduce((s, r) => s + (r.rating || 0), 0) / validReviews.length).toFixed(1) : null;
 
     return (
         <div className="mt-4 border-t border-green-100 pt-4">

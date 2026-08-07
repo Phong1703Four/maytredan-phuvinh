@@ -128,8 +128,9 @@ export default function EcoShopSection() {
     };
 
     const updateQty = (id, delta) => setCart(prev => prev.map(i => i.id === id ? { ...i, qty: Math.max(0, i.qty + delta) } : i).filter(i => i.qty > 0));
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const cartCount = cart.reduce((s, i) => s + i.qty, 0);
+    const validCart = Array.isArray(cart) ? cart : [];
+    const total = validCart.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0);
+    const cartCount = validCart.reduce((s, i) => s + (i.qty || 1), 0);
 
     return (
         <section id="shop" className="py-24 relative bg-gradient-to-b from-background to-primary/5">

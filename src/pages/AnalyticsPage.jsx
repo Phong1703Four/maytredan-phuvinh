@@ -48,15 +48,18 @@ export default function AnalyticsPage() {
         </div>
     );
 
-    const totalRevenue = stats.orders.reduce((s, o) => s + (o.total_price || 0), 0);
-    const totalOrders = stats.orders.length;
-    const pendingOrders = stats.orders.filter(o => o.status === 'pending').length;
-    const totalReviews = stats.reviews.length;
-    const avgRating = stats.reviews.length > 0 ? (stats.reviews.reduce((s, r) => s + (r.rating || 0), 0) / stats.reviews.length).toFixed(1) : '—';
+    const validOrders = Array.isArray(stats.orders) ? stats.orders : [];
+    const validReviews = Array.isArray(stats.reviews) ? stats.reviews : [];
+
+    const totalRevenue = validOrders.reduce((s, o) => s + (o.total_price || 0), 0);
+    const totalOrders = validOrders.length;
+    const pendingOrders = validOrders.filter(o => o.status === 'pending').length;
+    const totalReviews = validReviews.length;
+    const avgRating = validReviews.length > 0 ? (validReviews.reduce((s, r) => s + (r.rating || 0), 0) / validReviews.length).toFixed(1) : '—';
 
     // Product interest from order items
     const productInterest = {};
-    stats.orders.forEach(o => {
+    validOrders.forEach(o => {
         (o.items || []).forEach(item => {
             const name = item.name || 'Unknown';
             if (!productInterest[name]) productInterest[name] = { count: 0, revenue: 0 };
