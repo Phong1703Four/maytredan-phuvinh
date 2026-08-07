@@ -22,7 +22,10 @@ export default function AnalyticsPage() {
                     base44.entities.Order.list('-created_date', 100).catch(() => []),
                     base44.entities.Review.list('-created_date', 50).catch(() => []),
                 ]);
-                setStats({ orders: orders || [], reviews: reviews || [] });
+                setStats({ 
+                    orders: Array.isArray(orders) ? orders : (orders?.items || orders?.data || []), 
+                    reviews: Array.isArray(reviews) ? reviews : (reviews?.items || reviews?.data || []) 
+                });
             } catch {
                 setIsAdmin(false);
             }

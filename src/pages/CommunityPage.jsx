@@ -49,7 +49,8 @@ export default function CommunityPage() {
         setLoading(true);
         try {
             const data = await base44.entities.CommunityPost.list('-created_date', 50);
-            setPosts((data || []).filter(p => p.status === 'active'));
+            const dataArray = Array.isArray(data) ? data : (data?.items || data?.data || []);
+            setPosts(dataArray.filter(p => p.status === 'active'));
         } catch {
             setPosts([]);
         }

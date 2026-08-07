@@ -26,7 +26,7 @@ export default function MyOrdersModal({ onClose }) {
             return;
         }
         base44.entities.Order.filter({ customer_email: email }, '-created_date', 50)
-            .then(res => setOrders(res || []))
+            .then(res => setOrders(Array.isArray(res) ? res : (res?.items || res?.data || [])))
             .catch(err => {
                 console.error("Failed to load orders", err);
                 setOrders([]);
