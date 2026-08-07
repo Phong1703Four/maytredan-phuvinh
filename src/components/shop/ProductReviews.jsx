@@ -24,7 +24,7 @@ export default function ProductReviews({ productId, productName }) {
             return;
         }
         base44.entities.Review.filter({ product_id: productId }, '-created_date', 20)
-            .then(setReviews).catch(() => setReviews([])).finally(() => setLoading(false));
+            .then(res => setReviews(res || [])).catch(() => setReviews([])).finally(() => setLoading(false));
     }, [productId]);
 
     const handleSubmit = async () => {
