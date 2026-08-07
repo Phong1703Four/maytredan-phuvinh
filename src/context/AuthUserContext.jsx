@@ -66,8 +66,17 @@ export function AuthUserProvider({ children }) {
             if (!isAuth) { setUser(null); setUserProfile(null); return; }
             const me = await base44.auth.me();
             setUser(me);
-            const profiles = await base44.entities.UserProfile.filter({ user_email: me.email });
-            setUserProfile(profiles.length > 0 ? profiles[0] : null);
+            
+            // Ultra-robust email fallback to ensure we ALWAYS find the profile
+            const cachedEmail = typeof window !== 'undefined' ? window.localStorage.getItem('phuvinh_last_email') : null;
+            const targetEmail = me.email || me.email_address || me.username || cachedEmail;
+            
+            if (targetEmail) {
+                const profiles = await base44.entities.UserProfile.filter({ user_email: targetEmail });
+                setUserProfile(profiles.length > 0 ? profiles[0] : null);
+            } else {
+                setUserProfile(null);
+            }
         } catch {
             setUser(null);
             setUserProfile(null);
