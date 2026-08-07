@@ -9,7 +9,7 @@ import MyOrdersModal from '../user/MyOrdersModal';
 export default function UserMenu({ onOpenAuth }) {
     const navigate = useNavigate();
     const authCtx = useAuthUser();
-    const { t } = useLang();
+    const { t, lang } = useLang();
     const user = authCtx?.user;
     const userProfile = authCtx?.userProfile;
     const logout = authCtx?.logout || (() => { });

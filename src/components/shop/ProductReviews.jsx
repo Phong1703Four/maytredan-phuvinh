@@ -19,28 +19,41 @@ export default function ProductReviews({ productId, productName }) {
     const [success, setSuccess] = useState(false);
 
     useEffect(() => {
+        if (!base44.entities.Review) {
+            setLoading(false);
+            return;
+        }
         base44.entities.Review.filter({ product_id: productId }, '-created_date', 20)
-            .then(setReviews).finally(() => setLoading(false));
+            .then(setReviews).catch(() => setReviews([])).finally(() => setLoading(false));
     }, [productId]);
 
     const handleSubmit = async () => {
         if (!comment.trim()) return;
         setSubmitting(true);
-        const review = await base44.entities.Review.create({
-            product_id: productId,
-            product_name: productName,
-            reviewer_name: userProfile?.full_name || user?.email?.split('@')[0] || tr('Khách', 'Guest', 'Invitado'),
-            reviewer_email: user?.email || '',
-            rating,
-            comment: comment.trim(),
-        });
-        setReviews(prev => [review, ...prev]);
-        setComment('');
-        setRating(5);
-        setShowForm(false);
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 3000);
-        setSubmitting(false);
+        if (!base44.entities.Review) {
+            setSubmitting(false);
+            return;
+        }
+        try {
+            const review = await base44.entities.Review.create({
+                product_id: productId,
+                product_name: productName,
+                reviewer_name: userProfile?.full_name || user?.email?.split('@')[0] || tr('Khách', 'Guest', 'Invitado'),
+                reviewer_email: user?.email || '',
+                rating,
+                comment: comment.trim(),
+            });
+            setReviews(prev => [review, ...prev]);
+            setComment('');
+            setRating(5);
+            setShowForm(false);
+            setSuccess(true);
+            setTimeout(() => setSuccess(false), 3000);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const avg = reviews.length ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1) : null;
