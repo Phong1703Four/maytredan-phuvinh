@@ -25,8 +25,9 @@ export default async function handler(req) {
         const patternNote = pattern ? ` Weave pattern: ${pattern}.` : '';
         const finishNote = finish ? ` Finish: ${finish}.` : '';
         
-        let finalPrompt = `Tạo một bản thiết kế chân thực với yêu cầu: ${prompt || 'sản phẩm mây tre đan'}. ${styleNote} ${patternNote} ${finishNote} 
-Yêu cầu bắt buộc: Sử dụng chất liệu tự nhiên (mây, tre, giang). Thể hiện rõ kỹ thuật đan lát thủ công tinh xảo. Hình ảnh chất lượng cao 4k, ánh sáng studio, phông nền đơn giản tôn lên vẻ đẹp sản phẩm. STRICTLY NO HUMANS, NO FACES.`;
+        let finalPrompt = `Tạo một bản thiết kế sản phẩm thủ công mỹ nghệ chân thực với yêu cầu: ${prompt || 'sản phẩm mây tre đan'}. ${styleNote} ${patternNote} ${finishNote} 
+LƯU Ý TỐI QUAN TRỌNG: KHÔNG CÓ NGƯỜI TRONG TRONG ẢNH (NO PEOPLE, NO HUMANS). Đây là ảnh chụp tĩnh vật sản phẩm (Product photography). 
+Yêu cầu bắt buộc: Sử dụng chất liệu tự nhiên (mây, tre). Thể hiện rõ kỹ thuật đan lát thủ công tinh xảo. Hình ảnh chất lượng cao 4k, ánh sáng studio, phông nền đơn giản tôn lên vẻ đẹp sản phẩm.`;
 
         // 1. Generate Image using Gemini (Imagen 3)
         let generatedImageUrl = '';
