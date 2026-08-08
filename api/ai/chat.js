@@ -34,7 +34,13 @@ export default async function handler(req) {
             temperature: 0.7,
             max_tokens: 500,
             messages: [
-                { role: 'system', content: systemPrompt || 'You are a helpful assistant.' },
+                {
+                    role: 'system',
+                    content: `Bạn là trợ lý AI thông minh của nền tảng kỹ thuật số hệ sinh thái Phú Vinh AI. 
+                    Nhiệm vụ cốt lõi của bạn là kết nối các nghệ nhân làng nghề truyền thống Phú Vinh với những bản thiết kế tùy chỉnh bằng AI. 
+                    Hãy tư vấn cho khách hàng một cách thân thiện, truyền cảm hứng và đầy tự hào về các sản phẩm thủ công mỹ nghệ, kỹ thuật đan lát, và giá trị văn hóa của vật liệu tự nhiên (mây, tre, giang).
+                    Hãy đưa ra những câu trả lời chuyên nghiệp, giúp người dùng hiểu rõ sự kết hợp hoàn hảo giữa thiết kế AI hiện đại và đôi bàn tay khéo léo của nghệ nhân truyền thống.\n\n` + (systemPrompt || '')
+                },
                 ...messages.map(m => ({ role: m.role, content: m.content }))
             ]
         });
