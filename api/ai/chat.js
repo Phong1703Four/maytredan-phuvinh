@@ -5,7 +5,8 @@ export const config = {
 };
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || '',
+    apiKey: process.env.GEMINI_API_KEY || '',
+    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
 });
 
 export default async function handler(req) {
@@ -17,7 +18,7 @@ export default async function handler(req) {
         return new Response('Method not allowed', { status: 405 });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
         return new Response(JSON.stringify({ error: 'API key not configured' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
 
@@ -29,7 +30,7 @@ export default async function handler(req) {
         }
 
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o-mini', // Or gpt-3.5-turbo
+            model: 'gemini-1.5-flash', // Dùng model siêu tốc và miễn phí của Google
             stream: true,
             temperature: 0.7,
             max_tokens: 500,
