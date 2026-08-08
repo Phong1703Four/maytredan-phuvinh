@@ -94,6 +94,7 @@ export default function HeroSection() {
     };
 
     const handleGenerate = async (overrides = {}) => {
+        if (generating) return; // Prevent duplicate requests
         const finalPrompt = overrides.prompt !== undefined ? overrides.prompt : prompt;
         const finalStyle = overrides.style !== undefined ? overrides.style : selectedStyle;
         const finalSize = overrides.size !== undefined ? overrides.size : selectedSize;
@@ -106,50 +107,51 @@ export default function HeroSection() {
         setGeneratedImage(null);
         setGeneratedDesc(null);
         setColorPalette(null);
-        const styleNote = finalStyle ? ` Phong cách: ${finalStyle}.` : '';
-        const sizeNote = finalSize ? ` Kích thước: ${finalSize === 'small' ? 'nhỏ (15-20cm)' : finalSize === 'medium' ? 'vừa (25-35cm)' : 'lớn (40-60cm)'}.` : '';
-        const patternNote = finalPattern ? ` Kiểu đan: ${finalPattern}.` : '';
-        const finishNote = finalFinish ? ` Hoàn thiện: ${finalFinish}.` : '';
-        const imageNote = uploadedImageUrl ? ' Tham khảo ảnh đính kèm để lấy cảm hứng thiết kế.' : '';
-        const fullPrompt = `Bạn là chuyên gia thiết kế sản phẩm mây tre đan Phú Vinh, Việt Nam. Tạo một mô tả thiết kế chi tiết, bảng màu gợi ý và ước lượng nguyên liệu + giá cả chi tiết cho sản phẩm: "${finalPrompt || 'sản phẩm mây tre đan'}".${styleNote}${sizeNote}${patternNote}${finishNote}${imageNote} Trả lời JSON với: description (mô tả thiết kế 3-4 câu bằng tiếng Việt), colorPalette (mảng 5 hex màu), materials (mảng 3 vật liệu chính), technique (kỹ thuật đan), materialEstimate (object chứa: items là mảng các {name, weight_kg, length_m, quantity, unit, price_per_kg_vnd (giá mỗi kg nguyên liệu tính bằng VNĐ, VD mây 80.000đ/kg, tre 50.000đ/kg, giang 30.000đ/kg, song 120.000đ/kg), item_cost_vnd (tổng chi phí vật liệu này = weight_kg * price_per_kg_vnd)}, total_weight_kg, estimated_hours, difficulty, total_material_cost_vnd (tổng chi phí nguyên liệu), labor_cost_vnd (chi phí nhân công = estimated_hours * 50.000đ/giờ), total_estimated_cost_vnd (tổng = nguyên liệu + nhân công)).`;
-        // Generate image using Pollinations AI
-        const seed = Math.floor(Math.random() * 100000000);
-        const safePrompt = encodeURIComponent(`PRODUCT SHOT ONLY. MASTERPIECE STUDIO PHOTOGRAPHY OF A SINGLE HANDCRAFTED BAMBOO OR RATTAN ITEM. INANIMATE OBJECT ON A CLEAN WHITE STUDIO TABLE. STRICTLY NO HUMANS, NO PEOPLE, NO MODELS, NO FACES, NO HANDS. ITEM DESCRIPTION: ${finalPrompt || 'decorative basket'}. ${finalStyle ? finalStyle + ' style.' : ''} High-end product lighting, intricate weave, 8k resolution, highly detailed.`);
-        const imgUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=1024&height=1024&nologo=true&model=flux&seed=${seed}`;
 
-        // Mock LLM response with dynamic details
-        const mockDesc = {
-            description: `Sản phẩm "${finalPrompt || 'Giỏ mây tre đan'}" được thiết kế thủ công tinh xảo, mang hơi hướng ${finalStyle || 'truyền thống'}. Sự kết hợp hoàn hảo giữa kỹ thuật đan lát đặc trưng của làng nghề Phú Vinh và vẻ đẹp tự nhiên của chất liệu mang đến không gian sang trọng, tinh tế.`,
-            colorPalette: ['#f8e5c0', '#d4a373', '#8b5a2b', '#5c4033', '#e9edc9'],
-            materials: ['Mây rừng tự nhiên', 'Tre già', 'Sợi dù'],
-            technique: `Kỹ thuật đan ${finalPattern || 'truyền thống'} với độ hoàn thiện ${finalFinish || 'tự nhiên'} cao cấp.`,
-            materialEstimate: {
-                items: [
-                    { name: 'Mây rừng', weight_kg: 1.5, length_m: 200, quantity: 1, unit: 'cuộn', price_per_kg_vnd: 80000, item_cost_vnd: 120000 },
-                    { name: 'Tre nứa', weight_kg: 0.5, length_m: 50, quantity: 1, unit: 'bó', price_per_kg_vnd: 50000, item_cost_vnd: 25000 }
-                ],
-                total_weight_kg: 2,
-                estimated_hours: 12,
-                difficulty: 'Trung bình - Cao',
-                total_material_cost_vnd: 145000,
-                labor_cost_vnd: 600000,
-                total_estimated_cost_vnd: 745000
-            }
-        };
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
 
-        // Preload image to avoid broken icon while downloading
-        const img = new Image();
-        img.src = imgUrl;
-        img.onload = () => {
-            setGeneratedImage(imgUrl);
-            setGeneratedDesc(mockDesc);
-            setColorPalette(mockDesc.colorPalette);
+        try {
+            const res = await fetch('/api/ai/design', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: finalPrompt,
+                    style: finalStyle,
+                    size: finalSize,
+                    pattern: finalPattern,
+                    finish: finalFinish,
+                    imageUrl: uploadedImageUrl
+                }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!res.ok) throw new Error('API Error');
+
+            const data = await res.json();
+            
+            if (data.error) throw new Error(data.error);
+
+            // Preload image to avoid broken icon while downloading
+            const img = new Image();
+            img.src = data.imageUrl;
+            img.onload = () => {
+                setGeneratedImage(data.imageUrl);
+                setGeneratedDesc(data.specs);
+                setColorPalette(data.specs?.colorPalette || null);
+                setGenerating(false);
+            };
+            img.onerror = () => {
+                toast.error(lang === 'vi' ? 'Lỗi tải ảnh. Vui lòng thử lại!' : 'Failed to load image. Please try again!');
+                setGenerating(false);
+            };
+        } catch (error) {
+            clearTimeout(timeoutId);
+            console.error('Design Generation Error:', error);
+            toast.error(lang === 'vi' ? 'Hệ thống đang bận hoặc quá tải, vui lòng thử lại!' : 'System is busy or overloaded, please try again!');
             setGenerating(false);
-        };
-        img.onerror = () => {
-            toast.error(lang === 'vi' ? 'Tạo ảnh thất bại do sự cố mạng. Vui lòng thử lại!' : 'Failed to generate image due to network issue. Please try again!');
-            setGenerating(false);
-        };
+        }
     };
 
     const handleSuggestion = (s) => {

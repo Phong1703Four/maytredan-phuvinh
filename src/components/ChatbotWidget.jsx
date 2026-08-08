@@ -149,28 +149,54 @@ export default function ChatbotWidget() {
         const langInstruction = langMap[lang] || langMap.vi;
 
         try {
-            const systemPrompt = `${SYSTEM_PROMPT}\n\n${contextSummary}\n\n${langInstruction}\n\nUser: ${userText}`;
-            const res = await fetch(`https://text.pollinations.ai/prompt/${encodeURIComponent(systemPrompt)}`);
-            let replyText = await res.text();
+            const systemPrompt = `${SYSTEM_PROMPT}\n\n${contextSummary}\n\n${langInstruction}`;
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
             
-            if (!res.ok || replyText.includes('402') || replyText.includes('"error"')) {
-                throw new Error("API Error");
+            const res = await fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messages: history, lang, systemPrompt }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!res.ok) throw new Error("API Error");
+            
+            setMessages(prev => [...prev, { role: 'assistant', content: '' }]);
+            
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let fullReply = '';
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                fullReply += chunk;
+                setMessages(prev => {
+                    const newMessages = [...prev];
+                    const lastMsg = newMessages[newMessages.length - 1];
+                    lastMsg.content = fullReply;
+                    return newMessages;
+                });
             }
             
-            // The LLM responds natively as text now
-            let finalReply = replyText;
+            let finalReply = fullReply;
             let matchedIds = [];
             
-            // Extract the [PRODUCTS: 1, 2] part if it exists
             const productMatch = finalReply.match(/\[PRODUCTS:\s*([\d,\s]+)\]/);
             if (productMatch) {
-                // Parse the IDs and remove the bracketed text from the chat reply
                 const idString = productMatch[1];
                 matchedIds = idString.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
                 finalReply = finalReply.replace(productMatch[0], '').trim();
+                
+                setMessages(prev => {
+                    const newMessages = [...prev];
+                    newMessages[newMessages.length - 1].content = finalReply;
+                    return newMessages;
+                });
             }
-            
-            setMessages(prev => [...prev, { role: 'assistant', content: finalReply }]);
             
             // Basic local product recommendation based on keywords (fallback)
             if (matchedIds.length === 0) {
