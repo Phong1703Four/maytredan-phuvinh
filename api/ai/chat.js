@@ -1,13 +1,6 @@
-import OpenAI from 'openai';
-
 export const config = {
     runtime: 'edge',
 };
-
-const openai = new OpenAI({
-    apiKey: process.env.GEMINI_API_KEY || '',
-    baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
-});
 
 export default async function handler(req) {
     if (req.method === 'OPTIONS') {
@@ -29,8 +22,8 @@ export default async function handler(req) {
             return new Response(JSON.stringify({ error: 'Invalid messages array' }), { status: 400 });
         }
 
-        const response = await openai.chat.completions.create({
-            model: 'gemini-1.5-flash', // Dùng model siêu tốc và miễn phí của Google
+        const payload = {
+            model: 'gemini-1.5-flash',
             stream: true,
             temperature: 0.7,
             max_tokens: 500,
@@ -45,28 +38,27 @@ export default async function handler(req) {
                 },
                 ...messages.map(m => ({ role: m.role, content: m.content }))
             ]
-        });
+        };
 
-        // Convert OpenAI stream to ReadableStream
-        const stream = new ReadableStream({
-            async start(controller) {
-                try {
-                    for await (const chunk of response) {
-                        const text = chunk.choices[0]?.delta?.content || '';
-                        if (text) {
-                            controller.enqueue(new TextEncoder().encode(text));
-                        }
-                    }
-                    controller.close();
-                } catch (e) {
-                    controller.error(e);
-                }
-            }
-        });
-
-        return new Response(stream, {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+            method: 'POST',
             headers: {
-                'Content-Type': 'text/plain; charset=utf-8',
+                'Authorization': `Bearer ${process.env.GEMINI_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Google API Error:', errorText);
+            throw new Error(`Google API returned ${response.status}`);
+        }
+
+        // Truyền thẳng Stream (Dòng chảy dữ liệu) từ máy chủ Google về Vercel Client
+        return new Response(response.body, {
+            headers: {
+                'Content-Type': 'text/event-stream',
                 'Cache-Control': 'no-cache',
                 'Connection': 'keep-alive',
             },
