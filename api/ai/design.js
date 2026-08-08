@@ -25,7 +25,8 @@ export default async function handler(req) {
         const patternNote = pattern ? ` Weave pattern: ${pattern}.` : '';
         const finishNote = finish ? ` Finish: ${finish}.` : '';
         
-        let finalPrompt = `PRODUCT SHOT ONLY. MASTERPIECE STUDIO PHOTOGRAPHY OF A SINGLE HANDCRAFTED BAMBOO OR RATTAN ITEM. INANIMATE OBJECT ON A CLEAN WHITE STUDIO TABLE. STRICTLY NO HUMANS, NO PEOPLE, NO MODELS, NO FACES, NO HANDS. ITEM DESCRIPTION: ${prompt || 'decorative bamboo basket'}.${styleNote}${patternNote}${finishNote} High-end product lighting, intricate weave, 8k resolution, highly detailed, photorealistic.`;
+        let finalPrompt = `Tạo một bản thiết kế chân thực với yêu cầu: ${prompt || 'sản phẩm mây tre đan'}. ${styleNote} ${patternNote} ${finishNote} 
+Yêu cầu bắt buộc: Sử dụng chất liệu tự nhiên (mây, tre, giang). Thể hiện rõ kỹ thuật đan lát thủ công tinh xảo. Hình ảnh chất lượng cao 4k, ánh sáng studio, phông nền đơn giản tôn lên vẻ đẹp sản phẩm. STRICTLY NO HUMANS, NO FACES.`;
 
         // 1. Generate Image using Gemini (Imagen 3)
         let generatedImageUrl = '';
