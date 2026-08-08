@@ -70,6 +70,12 @@ export default function EcoShopSection() {
     const [materialFilter, setMaterialFilter] = useState('all');
     const [sortBy, setSortBy] = useState('popular');
     const [guideProduct, setGuideProduct] = useState(null);
+    const [visibleCount, setVisibleCount] = useState(8);
+
+    useEffect(() => {
+        setVisibleCount(8);
+    }, [category, searchQuery, priceFilter, materialFilter, sortBy]);
+
     const clearCart = () => setCart([]);
 
     const CATEGORIES = [
@@ -287,7 +293,7 @@ export default function EcoShopSection() {
                 )}
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                    {filtered.map((product, idx) => (
+                    {filtered.slice(0, visibleCount).map((product, idx) => (
                         <motion.div key={product.id}
                             layout initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.08, duration: 0.4 }}
                             whileHover={{ y: -6 }}
@@ -339,6 +345,15 @@ export default function EcoShopSection() {
                         </motion.div>
                     ))}
                 </div>
+
+                {visibleCount < filtered.length && (
+                    <div className="flex justify-center mt-12">
+                        <button onClick={() => setVisibleCount(prev => prev + 8)}
+                            className="px-8 py-3 rounded-full border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all shadow-lg hover:shadow-primary/30">
+                            + {t('shop.loadMore') || 'Xem Thêm'}
+                        </button>
+                    </div>
+                )}
             </div>
 
             {checkoutOpen && cart.length > 0 && (

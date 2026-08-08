@@ -733,4 +733,184 @@ export const PRODUCTS = [
             usage: { vi: 'Móc khóa, cắm hoa khô mini.', en: 'Keychain, hold dried flowers.', es: 'Llavero, flores secas.', zh: '钥匙扣，插干花。' }
         }
     },
+    {
+        id: 81, name_vi: 'Móc Khóa Hồ Lô Mây', name_en: 'Móc Khóa Hồ Lô Mây (English)', name_es: 'Móc Khóa Hồ Lô Mây (Spanish)', name_zh: 'Móc Khóa Hồ Lô Mây (Chinese)', artisan: 'Đông Hương', price: 23000, rating: 4.9, sold: 550, badge: null, image: IMAGES.product1, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Hồ Lô Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 82, name_vi: 'Charm Cỏ 4 Lá Tre', name_en: 'Charm Cỏ 4 Lá Tre (English)', name_es: 'Charm Cỏ 4 Lá Tre (Spanish)', name_zh: 'Charm Cỏ 4 Lá Tre (Chinese)', artisan: 'Đông Hương', price: 24000, rating: 4.6, sold: 258, badge: null, image: IMAGES.product2, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Cỏ 4 Lá Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 83, name_vi: 'Móc Khóa Heo Đất Mây', name_en: 'Móc Khóa Heo Đất Mây (English)', name_es: 'Móc Khóa Heo Đất Mây (Spanish)', name_zh: 'Móc Khóa Heo Đất Mây (Chinese)', artisan: 'Đông Hương', price: 14000, rating: 4.7, sold: 301, badge: null, image: IMAGES.product3, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Heo Đất Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 84, name_vi: 'Charm Mặt Trăng Tre', name_en: 'Charm Mặt Trăng Tre (English)', name_es: 'Charm Mặt Trăng Tre (Spanish)', name_zh: 'Charm Mặt Trăng Tre (Chinese)', artisan: 'Đông Hương', price: 14000, rating: 5.0, sold: 512, badge: null, image: IMAGES.product4, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Mặt Trăng Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 85, name_vi: 'Móc Khóa Chuông Gió Mây', name_en: 'Móc Khóa Chuông Gió Mây (English)', name_es: 'Móc Khóa Chuông Gió Mây (Spanish)', name_zh: 'Móc Khóa Chuông Gió Mây (Chinese)', artisan: 'Đông Hương', price: 18000, rating: 4.8, sold: 233, badge: null, image: IMAGES.product5, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Chuông Gió Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 86, name_vi: 'Charm Rùa Con Mây', name_en: 'Charm Rùa Con Mây (English)', name_es: 'Charm Rùa Con Mây (Spanish)', name_zh: 'Charm Rùa Con Mây (Chinese)', artisan: 'Đông Hương', price: 29000, rating: 4.9, sold: 366, badge: null, image: IMAGES.product6, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Rùa Con Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 87, name_vi: 'Móc Khóa Chim Én Tre', name_en: 'Móc Khóa Chim Én Tre (English)', name_es: 'Móc Khóa Chim Én Tre (Spanish)', name_zh: 'Móc Khóa Chim Én Tre (Chinese)', artisan: 'Đông Hương', price: 13000, rating: 4.8, sold: 157, badge: null, image: IMAGES.product1, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Chim Én Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 88, name_vi: 'Charm Hoa Đào Mây', name_en: 'Charm Hoa Đào Mây (English)', name_es: 'Charm Hoa Đào Mây (Spanish)', name_zh: 'Charm Hoa Đào Mây (Chinese)', artisan: 'Đông Hương', price: 22000, rating: 4.8, sold: 337, badge: null, image: IMAGES.product2, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Hoa Đào Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 89, name_vi: 'Móc Khóa Bướm Tre', name_en: 'Móc Khóa Bướm Tre (English)', name_es: 'Móc Khóa Bướm Tre (Spanish)', name_zh: 'Móc Khóa Bướm Tre (Chinese)', artisan: 'Đông Hương', price: 12000, rating: 5.0, sold: 298, badge: null, image: IMAGES.product3, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Bướm Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 90, name_vi: 'Charm Ngựa Gỗ Mây', name_en: 'Charm Ngựa Gỗ Mây (English)', name_es: 'Charm Ngựa Gỗ Mây (Spanish)', name_zh: 'Charm Ngựa Gỗ Mây (Chinese)', artisan: 'Đông Hương', price: 23000, rating: 4.9, sold: 540, badge: null, image: IMAGES.product4, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Ngựa Gỗ Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 91, name_vi: 'Móc Khóa Nón Lá Cờ Đỏ', name_en: 'Móc Khóa Nón Lá Cờ Đỏ (English)', name_es: 'Móc Khóa Nón Lá Cờ Đỏ (Spanish)', name_zh: 'Móc Khóa Nón Lá Cờ Đỏ (Chinese)', artisan: 'Đông Hương', price: 20000, rating: 4.8, sold: 103, badge: null, image: IMAGES.product5, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Nón Lá Cờ Đỏ thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 92, name_vi: 'Charm Mặt Trời Mây', name_en: 'Charm Mặt Trời Mây (English)', name_es: 'Charm Mặt Trời Mây (Spanish)', name_zh: 'Charm Mặt Trời Mây (Chinese)', artisan: 'Đông Hương', price: 20000, rating: 4.8, sold: 318, badge: null, image: IMAGES.product6, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Mặt Trời Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 93, name_vi: 'Móc Khóa Sao Biển Tre', name_en: 'Móc Khóa Sao Biển Tre (English)', name_es: 'Móc Khóa Sao Biển Tre (Spanish)', name_zh: 'Móc Khóa Sao Biển Tre (Chinese)', artisan: 'Đông Hương', price: 27000, rating: 4.8, sold: 264, badge: null, image: IMAGES.product1, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Sao Biển Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 94, name_vi: 'Charm Bông Tuyết Mây', name_en: 'Charm Bông Tuyết Mây (English)', name_es: 'Charm Bông Tuyết Mây (Spanish)', name_zh: 'Charm Bông Tuyết Mây (Chinese)', artisan: 'Đông Hương', price: 15000, rating: 4.9, sold: 326, badge: null, image: IMAGES.product2, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Bông Tuyết Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 95, name_vi: 'Móc Khóa Chiếc Cúp Tre', name_en: 'Móc Khóa Chiếc Cúp Tre (English)', name_es: 'Móc Khóa Chiếc Cúp Tre (Spanish)', name_zh: 'Móc Khóa Chiếc Cúp Tre (Chinese)', artisan: 'Đông Hương', price: 20000, rating: 4.5, sold: 358, badge: null, image: IMAGES.product3, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Chiếc Cúp Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 96, name_vi: 'Charm Khóa Vàng Mây', name_en: 'Charm Khóa Vàng Mây (English)', name_es: 'Charm Khóa Vàng Mây (Spanish)', name_zh: 'Charm Khóa Vàng Mây (Chinese)', artisan: 'Đông Hương', price: 28000, rating: 4.7, sold: 394, badge: null, image: IMAGES.product4, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Khóa Vàng Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 97, name_vi: 'Móc Khóa Lồng Đèn Đỏ Mây', name_en: 'Móc Khóa Lồng Đèn Đỏ Mây (English)', name_es: 'Móc Khóa Lồng Đèn Đỏ Mây (Spanish)', name_zh: 'Móc Khóa Lồng Đèn Đỏ Mây (Chinese)', artisan: 'Đông Hương', price: 14000, rating: 4.8, sold: 419, badge: null, image: IMAGES.product5, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Lồng Đèn Đỏ Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 98, name_vi: 'Charm Nơ Xinh Tre', name_en: 'Charm Nơ Xinh Tre (English)', name_es: 'Charm Nơ Xinh Tre (Spanish)', name_zh: 'Charm Nơ Xinh Tre (Chinese)', artisan: 'Đông Hương', price: 12000, rating: 4.6, sold: 435, badge: null, image: IMAGES.product6, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Nơ Xinh Tre thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 99, name_vi: 'Móc Khóa Gấu Nâu Mây', name_en: 'Móc Khóa Gấu Nâu Mây (English)', name_es: 'Móc Khóa Gấu Nâu Mây (Spanish)', name_zh: 'Móc Khóa Gấu Nâu Mây (Chinese)', artisan: 'Đông Hương', price: 20000, rating: 4.8, sold: 433, badge: null, image: IMAGES.product1, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Móc Khóa Gấu Nâu Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
+    {
+        id: 100, name_vi: 'Charm Bánh Chưng Mây', name_en: 'Charm Bánh Chưng Mây (English)', name_es: 'Charm Bánh Chưng Mây (Spanish)', name_zh: 'Charm Bánh Chưng Mây (Chinese)', artisan: 'Đông Hương', price: 13000, rating: 4.9, sold: 261, badge: null, image: IMAGES.product2, category: 'charms', materials: ['bamboo', 'rattan'],
+        guide: {
+            dimensions: '3 × 3 × 1 cm', craftTime: '1 giờ',
+            care: { vi: 'Tránh nước', en: 'Avoid water', es: 'Evita agua', zh: '防水' },
+            story: { vi: 'Charm Bánh Chưng Mây thủ công.', en: 'Handcrafted charm.', es: 'Charm artesanal.', zh: '手工饰品。' },
+            usage: { vi: 'Trang trí móc khóa.', en: 'Keychain decor.', es: 'Decoración.', zh: '钥匙扣装饰。' }
+        }
+    },
 ];
